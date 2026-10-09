@@ -5,7 +5,22 @@ const KEY_SIZE = "dn-note-size-v1";
 const TOTAL_MVP = 5;
 
 const $ = (id) => document.getElementById(id);
-const channel = "BroadcastChannel" in window ? new BroadcastChannel(CHANNEL) : null;
+// An audience popup retains an opener reference even from local file:// pages.
+const storage = {
+  get(k) { try { return localStorage.getItem(k); } catch (_) { return null; } },
+  set(k,v) { try { localStorage.setItem(k,v); } catch (_) {} }
+};
+const MSG_TAG = "digital-neanderthals-stage-v1";
+const targetOrigin = location.protocol === "file:" ? "*" : location.origin;
+function sendToAudience(payload) {
+  if (!audienceWindow || audienceWindow.closed) return;
+  audienceWindow.postMessage({ ...payload, channel: MSG_TAG }, targetOrigin);
+}
+function readSavedSlide() {
+  const hash = location.hash.match(/^#s=(0[1-9]|1[0-9]|2[0-5])$/);
+  return hash?.[1] || storage.get(KEY_SLIDE);
+}
+
 const formatId = (n) => String(n).padStart(2, "0");
 const formatClock = (ms) => {
   const sec = Math.max(0, Math.floor(ms / 1000));
@@ -15,20 +30,20 @@ const formatClock = (ms) => {
 let slides = [];
 let notes = new Map();
 let index = 0;
-let currentNoteSize = Number(localStorage.getItem(KEY_SIZE)) || 17;
+let currentNoteSize = Number(storage.get(KEY_SIZE)) || 17;
 let audienceWindow = null;
 let viewerLastSeen = 0;
 let timer = loadTimer();
 
 function loadTimer() {
   try {
-    const t = JSON.parse(localStorage.getItem(KEY_TIMER) || "null");
+    const t = JSON.parse(storage.get(KEY_TIMER) || "null");
     if (t && Number.isFinite(t.accumulated) && (t.startedAt === null || Number.isFinite(t.startedAt)))
       return t;
   } catch (_) {}
   return { accumulated: 0, startedAt: null };
 }
-function saveTimer() { localStorage.setItem(KEY_TIMER, JSON.stringify(timer)); }
+function saveTimer() { storage.set(KEY_TIMER, JSON.stringify(timer)); }
 function elapsedMs() {
   return timer.accumulated + (timer.startedAt === null ? 0 : Date.now() - timer.startedAt);
 }
@@ -36,7 +51,7 @@ function updateClock() {
   $("elapsed").textContent = formatClock(elapsedMs());
   $("wallTime").textContent = new Intl.DateTimeFormat("ru-RU", { hour: "2-digit", minute: "2-digit" }).format(new Date());
   $("toggleTimer").textContent = timer.startedAt === null ? "▶ Таймер" : "Ⅱ Пауза";
-  const connected = Date.now() - viewerLastSeen < 7500;
+  const connected = !!audienceWindow && !audienceWindow.closed && Date.now() - viewerLastSeen < 7500;
   $("connectionStatus").innerHTML = `<i class="dot${connected ? " on" : ""}"></i>${connected ? "Экран подключён" : "Экран не подключён"}`;
 }
 function showError(message) {
@@ -49,8 +64,10 @@ function timeline(note) {
 function pushState() {
   if (!slides.length) return;
   const id = slides[index].id;
-  localStorage.setItem(KEY_SLIDE, id);
-  channel?.postMessage({ type: "STATE", id });
+  storage.set(KEY_SLIDE, id);
+  // Hash survives refresh even when browsers disable localStorage on file://.
+  if (location.hash !== "#s=" + id) history.replaceState(null, "", "#s=" + id);
+  sendToAudience({ type: "STATE", id });
 }
 function createSection(section) {
   const wrap = document.createElement("section");
@@ -126,28 +143,21 @@ function showAudience() {
   }
   // Browser restrictions prevent sending another monitor fullscreen programmatically.
   audienceWindow.focus();
+  // Reloaded or newly created audience window asks for fresh state.
   pushState();
 }
-async function boot() {
-  if (location.protocol === "file:") {
-    showError("Открой презентацию через локальный сервер: python -m http.server 8000, затем http://localhost:8000/. Для двух окон file:// ненадёжен.");
-    return;
-  }
+function boot() {
   try {
-    const [manifestResponse, notesResponse] = await Promise.all([
-      fetch("data/slides.json", { cache: "no-cache" }),
-      fetch("content/notes.json", { cache: "no-cache" })
-    ]);
-    if (!manifestResponse.ok || !notesResponse.ok) throw Error("Не удалось загрузить data/slides.json или content/notes.json");
-    const manifest = await manifestResponse.json();
-    const notebook = await notesResponse.json();
+    const manifest = window.__DECK_MANIFEST__;
+    const notebook = window.__NOTES_DATA__;
+    if (!manifest?.slides || !notebook?.notes) throw Error("Не загружены data/slides-data.js или content/notes-data.js");
     slides = manifest.slides.slice(0, TOTAL_MVP);
     notes = new Map(notebook.notes.map((note) => [note.id, note]));
     if (slides.length !== TOTAL_MVP) throw Error("Для MVP не хватает первых пяти записей в манифесте");
     for (const s of slides) {
       if (!notes.has(s.id)) throw Error("Отсутствуют заметки для слайда " + s.id);
     }
-    const saved = localStorage.getItem(KEY_SLIDE);
+    const saved = readSavedSlide();
     index = Math.max(0, slides.findIndex((s) => s.id === saved));
     for (const slide of slides) {
       const option = document.createElement("option");
@@ -157,7 +167,7 @@ async function boot() {
     }
     $("currentImage").addEventListener("error", () => showError("Не найдена картинка " + slides[index].localImagePath + ". Проверь локальные файлы."));
     render();
-    channel?.postMessage({ type: "HELLO", from: "presenter" });
+// Audience connects by HELLO through window.opener.postMessage.
   } catch (e) {
     showError("Не удалось запустить презентацию: " + e.message);
   }
@@ -177,18 +187,24 @@ $("resetTimer").addEventListener("click", () => {
 });
 $("largerText").addEventListener("click", () => {
   currentNoteSize = Math.min(28, currentNoteSize + 1);
-  localStorage.setItem(KEY_SIZE, String(currentNoteSize));
+  storage.set(KEY_SIZE, String(currentNoteSize));
   $("notesScroll").style.fontSize = currentNoteSize + "px";
 });
 $("smallerText").addEventListener("click", () => {
   currentNoteSize = Math.max(13, currentNoteSize - 1);
-  localStorage.setItem(KEY_SIZE, String(currentNoteSize));
+  storage.set(KEY_SIZE, String(currentNoteSize));
   $("notesScroll").style.fontSize = currentNoteSize + "px";
 });
 document.addEventListener("keydown", keyHandler);
-channel?.addEventListener("message", (event) => {
+window.addEventListener("message", (event) => {
+  // Reject messages from anything except our exact audience popup.
+  if (event.source !== audienceWindow || !audienceWindow) return;
   const data = event.data || {};
-  if (data.type === "HELLO" && data.from === "audience") { viewerLastSeen = Date.now(); pushState(); }
+  if (data.channel !== MSG_TAG) return;
+  if (data.type === "HELLO" && data.from === "audience") {
+    viewerLastSeen = Date.now();
+    pushState();
+  }
   if (data.type === "VIEWER_ALIVE") viewerLastSeen = Date.now();
 });
 setInterval(updateClock, 1000);
