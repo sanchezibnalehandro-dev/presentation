@@ -21,19 +21,19 @@ a{color:#add5fc}
 .dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#647486;margin-right:7px}
 .dot.on{background:#50c89d;box-shadow:0 0 0 4px rgba(80,200,157,.10)}
 .status{font-size:12px;color:#b8c9d8;min-width:115px}
-.main{min-height:0;display:grid;grid-template-columns:minmax(0,1.15fr) minmax(360px,.85fr);gap:16px;padding:16px}
+.main{min-height:0;display:grid;grid-template-columns:minmax(330px,0.37fr) minmax(0,0.63fr);gap:14px;padding:14px}
 .stage-area{min-width:0;min-height:0;display:flex;flex-direction:column;gap:14px}
 .panel{background:var(--panel);border:1px solid var(--edge);border-radius:15px;box-shadow:var(--shadow);overflow:hidden}
-.stage-main{padding:12px;flex:1;min-height:0;display:flex;flex-direction:column}
+.stage-main{padding:10px;flex:0 0 auto;min-height:0;display:flex;flex-direction:column}
 .panel-head{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:0 4px 10px}
 .panel-title{font-size:12px;text-transform:uppercase;letter-spacing:.10em;color:var(--muted);font-weight:750}
 .slide-count{font-size:13px;font-weight:750;color:var(--amber);font-variant-numeric:tabular-nums}
-.slide-box{min-height:0;flex:1;display:flex;justify-content:center;align-items:center;background:#020304;border-radius:7px;overflow:hidden}
+.slide-box{min-height:0;aspect-ratio:16/9;flex:0 0 auto;display:flex;justify-content:center;align-items:center;background:#020304;border-radius:7px;overflow:hidden}
 .slide-box img{display:block;width:100%;height:100%;object-fit:contain}
 .caption-line{display:flex;align-items:center;gap:9px;min-height:34px;padding:10px 3px 0;font-size:14px;font-weight:680}
 .caption-line .pale{font-weight:500;color:var(--muted);font-size:11px}
-.next-line{height:137px;display:flex;gap:14px;padding:12px;align-items:center}
-.next-preview{background:#050709;border-radius:6px;height:112px;aspect-ratio:16/9;overflow:hidden;flex:none}
+.next-line{height:94px;display:flex;gap:12px;padding:10px;align-items:center}
+.next-preview{background:#050709;border-radius:6px;height:70px;aspect-ratio:16/9;overflow:hidden;flex:none}
 .next-preview img{height:100%;width:100%;object-fit:contain}
 .next-text{min-width:0;display:flex;flex-direction:column;gap:5px}
 .next-text strong{font-size:15px;line-height:1.34}
@@ -46,7 +46,7 @@ a{color:#add5fc}
 .notes-scroll{overflow:auto;overscroll-behavior:contain;padding:8px 20px 28px;flex:1;min-height:0;scrollbar-color:#657080 transparent}
 .note-section{margin:18px 0 23px}
 .note-label{font-size:.72em;letter-spacing:.09em;font-weight:820;text-transform:uppercase;color:var(--amber);margin:0 0 9px}
-.note-copy{line-height:1.57;white-space:pre-wrap;word-break:normal;margin:0;font-size:1em;color:#e5ebf2}
+.note-copy{line-height:1.62;white-space:pre-wrap;word-break:normal;margin:0;font-size:1em;color:#e5ebf2}
 .note-when{color:var(--muted);font-size:13px;font-variant-numeric:tabular-nums}
 .toolbar{border-top:1px solid var(--edge);background:#111a25;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:10px 24px}
 .controls,.small-controls{display:flex;align-items:center;gap:8px}
@@ -62,6 +62,6 @@ a{color:#add5fc}
 .audience, .audience body{height:100%;overflow:hidden;background:#000}
 .audience img{width:100vw;height:100dvh;display:block;object-fit:contain;background:#000}
 .viewer-error{position:absolute;inset:0;display:grid;place-items:center;color:#fff;font:18px "Segoe UI",sans-serif}
-@media(max-width:1200px){.main{grid-template-columns:minmax(0,1fr) minmax(360px,.85fr)}.next-line{height:112px}.next-preview{height:88px}.time-pair strong{font-size:20px}.hint{display:none}}
+@media(max-width:1200px){.main{grid-template-columns:minmax(300px,.38fr) minmax(0,.62fr)}.next-line{height:90px}.next-preview{height:66px}.time-pair strong{font-size:20px}.hint{display:none}}
 @media(max-width:850px){.shell{min-height:850px;height:auto;grid-template-rows:70px minmax(0,1fr) auto}.main{display:flex;flex-direction:column}.stage-main{min-height:340px}.notes-panel{min-height:400px;height:540px}.hint{display:none}.next-line{height:120px}.toolbar{flex-wrap:wrap}.meta{gap:8px}}
 @media(max-width:550px){.topbar{padding:8px 12px}.time-pair:nth-child(2){display:none}.brand h1{font-size:13px}.status{display:none}.main{padding:10px}.next-preview{height:74px}.control-btn{padding:10px 11px}.nav-select{max-width:150px}.toolbar{padding:10px}.notes-panel{height:600px}}
