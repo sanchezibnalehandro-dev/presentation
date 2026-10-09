@@ -136,6 +136,7 @@ function keyHandler(ev) {
 }
 function showAudience() {
   const url = new URL("audience.html", window.location.href);
+  url.hash = "s=" + (slides[index]?.id || "01");
   audienceWindow = window.open(url.toString(), "dn_audience", "width=1280,height=720");
   if (!audienceWindow) {
     showError("Браузер заблокировал окно. Разреши всплывающие окна для этой страницы и нажми ещё раз.");
