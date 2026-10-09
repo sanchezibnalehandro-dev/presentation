@@ -21,6 +21,9 @@
 - [docs/HTML_MVP.md](docs/HTML_MVP.md) — требования к двум экранам и минимальная архитектура.
 - [docs/FACTCHECK.md](docs/FACTCHECK.md) — важные уточнения, чтобы не повторить фактические ошибки.
 - [docs/ROADMAP.md](docs/ROADMAP.md) — что делать дальше и критерии готовности.
+- [docs/WORKFLOW.md](docs/WORKFLOW.md) — как скачать/пронумеровать файлы и повторить сборку.
+- [AGENTS.md](AGENTS.md) — правила для Codex и новых AI-сессий.
+- [tools/import-slides.mjs](tools/import-slides.mjs) — перенос PNG в локальную папку для офлайн-показа.
 - [data/slides.json](data/slides.json) — **нумерованный реестр всех 25 изображений с точными ссылками на исходники**.
 
 ## Принцип
