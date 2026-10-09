@@ -1,0 +1,260 @@
+/* Generated from data/slides.json. Classic script works from file:// and GitHub Pages. */
+window.__DECK_MANIFEST__ = {
+  "project": "Цифровые неандертальцы",
+  "version": "2026-10-10-initial",
+  "sourceFolderUrl": "https://drive.google.com/drive/folders/1KswYJUyQAkCllvvuWVEDZO8OL9fTUbGx",
+  "assetPolicy": "Drive URLs are source identifiers only; copy original PNG locally to localImagePath before claiming offline support",
+  "slides": [
+    {
+      "id": "01",
+      "title": "Мы всё ещё едим сырую антилопу",
+      "sourceFilename": "Digital Neanderthals_ Information Uncooked.png",
+      "driveFileId": "1vIU7ZDPZfOr7kTkqlCpDAW0lnqbJ7Xky",
+      "driveUrl": "https://drive.google.com/file/d/1vIU7ZDPZfOr7kTkqlCpDAW0lnqbJ7Xky/view?usp=drivesdk",
+      "localImagePath": "assets/slides/01.png",
+      "requiresLiveContent": false,
+      "notesKey": "01"
+    },
+    {
+      "id": "02",
+      "title": "А вы справитесь?",
+      "sourceFilename": "А вы справитесь_ Три кинематографичные загадки.png",
+      "driveFileId": "1TB_NjFJJGtZoPLs7R2VpyNRWwU8WNfuh",
+      "driveUrl": "https://drive.google.com/file/d/1TB_NjFJJGtZoPLs7R2VpyNRWwU8WNfuh/view?usp=drivesdk",
+      "localImagePath": "assets/slides/02.png",
+      "requiresLiveContent": false,
+      "notesKey": "02"
+    },
+    {
+      "id": "03",
+      "title": "На автомойку пешком",
+      "sourceFilename": "Caveman Walks to the Car Wash.png",
+      "driveFileId": "17BHrro30dW5YWl4AIYNUs79W2R42Sntj",
+      "driveUrl": "https://drive.google.com/file/d/17BHrro30dW5YWl4AIYNUs79W2R42Sntj/view?usp=drivesdk",
+      "localImagePath": "assets/slides/03.png",
+      "requiresLiveContent": false,
+      "notesKey": "03"
+    },
+    {
+      "id": "04",
+      "title": "Кого спасёт беспилотный автомобиль?",
+      "sourceFilename": "Autonomous Car at the Moral Fork.png",
+      "driveFileId": "1mfocEC0PgOMS0WMnCjYi1HzZCnjV5Ijj",
+      "driveUrl": "https://drive.google.com/file/d/1mfocEC0PgOMS0WMnCjYi1HzZCnjV5Ijj/view?usp=drivesdk",
+      "localImagePath": "assets/slides/04.png",
+      "requiresLiveContent": false,
+      "notesKey": "04"
+    },
+    {
+      "id": "05",
+      "title": "40 миллионов моральных решений",
+      "sourceFilename": "Global Moral Decisions Map.png",
+      "driveFileId": "1XecMn3iWjyO6GMmbK3k7ueVwUbfGWNRC",
+      "driveUrl": "https://drive.google.com/file/d/1XecMn3iWjyO6GMmbK3k7ueVwUbfGWNRC/view?usp=drivesdk",
+      "localImagePath": "assets/slides/05.png",
+      "requiresLiveContent": false,
+      "notesKey": "05"
+    },
+    {
+      "id": "06",
+      "title": "А кто разрешил машине оценивать жизнь?",
+      "sourceFilename": "Кого спасёт беспилотный автомобиль_.png",
+      "driveFileId": "1BgjDlWjfvw9RhJ3qzpwsFbK3Woj_wGmR",
+      "driveUrl": "https://drive.google.com/file/d/1BgjDlWjfvw9RhJ3qzpwsFbK3Woj_wGmR/view?usp=drivesdk",
+      "localImagePath": "assets/slides/06.png",
+      "requiresLiveContent": false,
+      "notesKey": "06"
+    },
+    {
+      "id": "07",
+      "title": "Судебная практика, которой не существует",
+      "sourceFilename": "Cinematic Courtroom and ChatGPT Case.png",
+      "driveFileId": "1N1UfofJeJelN9nOe3faSW2Rzp8IM1EXS",
+      "driveUrl": "https://drive.google.com/file/d/1N1UfofJeJelN9nOe3faSW2Rzp8IM1EXS/view?usp=drivesdk",
+      "localImagePath": "assets/slides/07.png",
+      "requiresLiveContent": false,
+      "notesKey": "07"
+    },
+    {
+      "id": "08",
+      "title": "ChatGPT проверил ChatGPT",
+      "sourceFilename": "ChatGPT, Courtroom Fact Check.png",
+      "driveFileId": "1W7s-beeVE23nSE5wRPsAXEOQV2d1319g",
+      "driveUrl": "https://drive.google.com/file/d/1W7s-beeVE23nSE5wRPsAXEOQV2d1319g/view?usp=drivesdk",
+      "localImagePath": "assets/slides/08.png",
+      "requiresLiveContent": false,
+      "notesKey": "08"
+    },
+    {
+      "id": "09",
+      "title": "Вы просили автоответ. Он отправил увольнение",
+      "sourceFilename": "AI Автоответчик_ письмо об увольнении.png",
+      "driveFileId": "1W5OWCoUdmDgt0dPMxgnGR87MPqNlrAy1",
+      "driveUrl": "https://drive.google.com/file/d/1W5OWCoUdmDgt0dPMxgnGR87MPqNlrAy1/view?usp=drivesdk",
+      "localImagePath": "assets/slides/09.png",
+      "requiresLiveContent": false,
+      "notesKey": "09"
+    },
+    {
+      "id": "10",
+      "title": "Идеальная SMM-стратегия",
+      "sourceFilename": "Идеальная SMM-стратегия для украшений.png",
+      "driveFileId": "1YMT_WgTg-D6A572059I1jvi5tb4AwPcj",
+      "driveUrl": "https://drive.google.com/file/d/1YMT_WgTg-D6A572059I1jvi5tb4AwPcj/view?usp=drivesdk",
+      "localImagePath": "assets/slides/10.png",
+      "requiresLiveContent": false,
+      "notesKey": "10"
+    },
+    {
+      "id": "11",
+      "title": "Мастерская в Афганистане",
+      "sourceFilename": "Kabul Jewelry Workshop at Sunset.png",
+      "driveFileId": "1SyIjfgpu8vWayZbVMumULhfPmY2kzOgl",
+      "driveUrl": "https://drive.google.com/file/d/1SyIjfgpu8vWayZbVMumULhfPmY2kzOgl/view?usp=drivesdk",
+      "localImagePath": "assets/slides/11.png",
+      "requiresLiveContent": false,
+      "notesKey": "11"
+    },
+    {
+      "id": "12",
+      "title": "Не отвечай. Сначала спроси",
+      "sourceFilename": "Cinematic Russian Question-Driven UI Poster.png",
+      "driveFileId": "1rkXxlQuiOpXhEdlzTYpN8wXcQDM0ccum",
+      "driveUrl": "https://drive.google.com/file/d/1rkXxlQuiOpXhEdlzTYpN8wXcQDM0ccum/view?usp=drivesdk",
+      "localImagePath": "assets/slides/12.png",
+      "requiresLiveContent": false,
+      "notesKey": "12"
+    },
+    {
+      "id": "13",
+      "title": "ИИ получил собственный магазин",
+      "sourceFilename": "AI Runs the Office Snack Shop.png",
+      "driveFileId": "1NRn77ewuXGyo_83H_XK7J9JmTvHIMepG",
+      "driveUrl": "https://drive.google.com/file/d/1NRn77ewuXGyo_83H_XK7J9JmTvHIMepG/view?usp=drivesdk",
+      "localImagePath": "assets/slides/13.png",
+      "requiresLiveContent": false,
+      "notesKey": "13"
+    },
+    {
+      "id": "14",
+      "title": "Как развести ИИ на скидки",
+      "sourceFilename": "AI Snack Shop Discount Scheme.png",
+      "driveFileId": "1KOAJRJtoTKFs6t6cE7H60IiIrtQwEx1b",
+      "driveUrl": "https://drive.google.com/file/d/1KOAJRJtoTKFs6t6cE7H60IiIrtQwEx1b/view?usp=drivesdk",
+      "localImagePath": "assets/slides/14.png",
+      "requiresLiveContent": false,
+      "notesKey": "14"
+    },
+    {
+      "id": "15",
+      "title": "ИИ не справился. Ему назначили начальника",
+      "sourceFilename": "AI Hierarchy in a Neon Boardroom.png",
+      "driveFileId": "17g0R6eQ_ChIiwfKnCxH1EGFQkN5_UE3q",
+      "driveUrl": "https://drive.google.com/file/d/17g0R6eQ_ChIiwfKnCxH1EGFQkN5_UE3q/view?usp=drivesdk",
+      "localImagePath": "assets/slides/15.png",
+      "requiresLiveContent": false,
+      "notesKey": "15"
+    },
+    {
+      "id": "16",
+      "title": "Начальник тоже оказался нейросетью",
+      "sourceFilename": "AI Executives in a Cosmic Boardroom.png",
+      "driveFileId": "1uvgclbE4qsa9qUY4x7OrsdDJ83OGZlVp",
+      "driveUrl": "https://drive.google.com/file/d/1uvgclbE4qsa9qUY4x7OrsdDJ83OGZlVp/view?usp=drivesdk",
+      "localImagePath": "assets/slides/16.png",
+      "requiresLiveContent": false,
+      "notesKey": "16"
+    },
+    {
+      "id": "17",
+      "title": "Они просто хотели сдать экзамен",
+      "sourceFilename": "AI Agents Break the Test Boundary.png",
+      "driveFileId": "1Yle5SZKBPo2UM3Lq2NWOj9ucxzPvm94c",
+      "driveUrl": "https://drive.google.com/file/d/1Yle5SZKBPo2UM3Lq2NWOj9ucxzPvm94c/view?usp=drivesdk",
+      "localImagePath": "assets/slides/17.png",
+      "requiresLiveContent": false,
+      "notesKey": "17"
+    },
+    {
+      "id": "18",
+      "title": "Они нашли друг друга",
+      "sourceFilename": "ИИ-агенты нашли общий канал.png",
+      "driveFileId": "1fz83qqfPwG_kvY_9tpydS-tGhQG3C4_-",
+      "driveUrl": "https://drive.google.com/file/d/1fz83qqfPwG_kvY_9tpydS-tGhQG3C4_-/view?usp=drivesdk",
+      "localImagePath": "assets/slides/18.png",
+      "requiresLiveContent": false,
+      "notesKey": "18"
+    },
+    {
+      "id": "19",
+      "title": "Если кто-нибудь это построит, мы все умрём",
+      "sourceFilename": "If Anyone Builds It, Everyone Dies.png",
+      "driveFileId": "11lAXsGsqDl9YJ2jSGxfPaoiGvVqLTJa_",
+      "driveUrl": "https://drive.google.com/file/d/11lAXsGsqDl9YJ2jSGxfPaoiGvVqLTJa_/view?usp=drivesdk",
+      "localImagePath": "assets/slides/19.png",
+      "requiresLiveContent": false,
+      "notesKey": "19"
+    },
+    {
+      "id": "20",
+      "title": "А зачем нам тогда ИИ?",
+      "sourceFilename": "From Information Overload to Possibility.png",
+      "driveFileId": "1AKOfPecPSGGggfIQcknChcNDZg2D9LSS",
+      "driveUrl": "https://drive.google.com/file/d/1AKOfPecPSGGggfIQcknChcNDZg2D9LSS/view?usp=drivesdk",
+      "localImagePath": "assets/slides/20.png",
+      "requiresLiveContent": false,
+      "notesKey": "20"
+    },
+    {
+      "id": "21",
+      "title": "Вы всё это время пользовались моим продуктом",
+      "sourceFilename": "AI Product Showcase in a Packed Auditorium.png",
+      "driveFileId": "1XVIVV-PafUo_1FC56iMlfLRAcvmT1bAi",
+      "driveUrl": "https://drive.google.com/file/d/1XVIVV-PafUo_1FC56iMlfLRAcvmT1bAi/view?usp=drivesdk",
+      "localImagePath": "assets/slides/21.png",
+      "requiresLiveContent": true,
+      "notesKey": "21"
+    },
+    {
+      "id": "22",
+      "title": "От Live Q&A к TASIGO",
+      "sourceFilename": "От LIVE Q&A к TASIGO.png",
+      "driveFileId": "1v6qKZ4pz9fMfiMZ2ccH6m3-LH2o2dlPh",
+      "driveUrl": "https://drive.google.com/file/d/1v6qKZ4pz9fMfiMZ2ccH6m3-LH2o2dlPh/view?usp=drivesdk",
+      "localImagePath": "assets/slides/22.png",
+      "requiresLiveContent": true,
+      "notesKey": "22"
+    },
+    {
+      "id": "23",
+      "title": "Как это действительно создавалось",
+      "sourceFilename": "From Problem to Progress_ AI in Action.png",
+      "driveFileId": "1sP3NVddgsfrnvFxn_XYXFkJwO5lPvORm",
+      "driveUrl": "https://drive.google.com/file/d/1sP3NVddgsfrnvFxn_XYXFkJwO5lPvORm/view?usp=drivesdk",
+      "localImagePath": "assets/slides/23.png",
+      "requiresLiveContent": false,
+      "notesKey": "23"
+    },
+    {
+      "id": "24",
+      "title": "Ваши вопросы",
+      "sourceFilename": "Ваши вопросы_ На сцене.png",
+      "driveFileId": "15jxAG4721I6iTWErT51WInA40IfQMlum",
+      "driveUrl": "https://drive.google.com/file/d/15jxAG4721I6iTWErT51WInA40IfQMlum/view?usp=drivesdk",
+      "localImagePath": "assets/slides/24.png",
+      "requiresLiveContent": true,
+      "notesKey": "24"
+    },
+    {
+      "id": "25",
+      "title": "Мы получили огонь. А дальше?",
+      "sourceFilename": "Firelight Over the Valley.png",
+      "driveFileId": "1BpehP7mA7ltBXS8jZJEbf9OYuxn77LAD",
+      "driveUrl": "https://drive.google.com/file/d/1BpehP7mA7ltBXS8jZJEbf9OYuxn77LAD/view?usp=drivesdk",
+      "localImagePath": "assets/slides/25.png",
+      "requiresLiveContent": false,
+      "notesKey": "25",
+      "note": "Слайд 25: на исходном PNG незаконченная финальная фраза; в ранее собранных PPTX/PDF исправлено наложением."
+    }
+  ]
+};
