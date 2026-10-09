@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b1119">
+  <title>Цифровые неандертальцы · пульт ведущего</title>
+  <link rel="stylesheet" href="styles.css">
+  <script type="module" src="presenter.js"></script>
+</head>
+<body>
+  <div class="shell">
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true">◈</span>
+        <div>
+          <div class="kicker">Presenter · MVP / 5 слайдов</div>
+          <h1>ЦИФРОВЫЕ НЕАНДЕРТАЛЬЦЫ</h1>
+        </div>
+      </div>
+      <div class="meta">
+        <div class="time-pair"><small>Время выступления</small><strong id="elapsed">00:00</strong></div>
+        <div class="time-pair"><small>Местное время</small><strong id="wallTime">--:--</strong></div>
+        <span class="status" id="connectionStatus" aria-live="polite"><i class="dot"></i>Экран не открыт</span>
+      </div>
+    </header>
+
+    <div id="alert" class="alert" hidden role="alert"></div>
+
+    <main class="main">
+      <section class="stage-area" aria-label="Слайды">
+        <div class="panel stage-main">
+          <div class="panel-head">
+            <span class="panel-title">Сейчас на экране аудитории</span>
+            <span class="slide-count" id="slideNumber">01 / 05</span>
+          </div>
+          <div class="slide-box">
+            <img id="currentImage" alt="Текущий слайд" src="assets/slides/01.png">
+          </div>
+          <div class="caption-line">
+            <span id="currentTitle">Мы всё ещё едим сырую антилопу</span>
+            <span class="pale" id="timingLabel">00–05 мин</span>
+          </div>
+        </div>
+        <div class="panel next-line" aria-label="Следующий слайд">
+          <div class="next-preview"><img id="nextImage" alt="Следующий слайд" src="assets/slides/02.png"></div>
+          <div class="next-text"><span class="panel-title">Дальше</span><strong id="nextTitle">А вы справитесь?</strong><span class="note-when" id="nextTiming">05–10 мин</span></div>
+        </div>
+      </section>
+
+      <section class="panel notes-panel" aria-label="Заметки докладчика">
+        <div class="notes-header">
+          <div><div class="panel-title">Только для ведущего</div><h2>Заметки докладчика</h2></div>
+          <div class="notes-actions">
+            <button id="smallerText" type="button" class="square-btn" title="Уменьшить текст" aria-label="Уменьшить текст">А−</button>
+            <button id="largerText" type="button" class="square-btn" title="Увеличить текст" aria-label="Увеличить текст">А+</button>
+          </div>
+        </div>
+        <div class="notes-scroll" id="notesScroll" tabindex="0" aria-label="Полный текст заметок">
+          <p class="muted">Загружаем заметки…</p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="toolbar">
+      <div class="controls">
+        <button type="button" id="prev" class="control-btn" aria-label="Предыдущий слайд">← Назад</button>
+        <button type="button" id="next" class="control-btn primary" aria-label="Следующий слайд">Далее →</button>
+        <select id="jump" class="nav-select" aria-label="Перейти к слайду"></select>
+      </div>
+      <div class="small-controls">
+        <button type="button" id="toggleTimer" class="control-btn text-only">▶ Таймер</button>
+        <button type="button" id="resetTimer" class="control-btn text-only" title="Сбросить таймер">Сброс</button>
+        <button type="button" id="openAudience" class="control-btn">↗ Экран аудитории</button>
+      </div>
+      <span class="hint">← → / Space · Home / End · F11 на проекторе</span>
+    </footer>
+  </div>
+</body>
+</html>
