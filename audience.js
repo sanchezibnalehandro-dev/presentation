@@ -1,26 +1,32 @@
-const channel = "BroadcastChannel" in window ? new BroadcastChannel("digital-neanderthals-stage-v1") : null;
-const KEY_SLIDE = "dn-slide-v1";
+// Audience-only view. No dependencies, no fetch, no localStorage, no server.
+// The presenter creates this window, and two windows communicate directly.
+const MSG_TAG = "digital-neanderthals-stage-v1";
 const slide = document.getElementById("slide");
 const error = document.getElementById("viewerError");
 let current = null;
-
+const targetOrigin = location.protocol === "file:" ? "*" : location.origin;
 function show(id) {
-  if (!/^0[1-5]$/.test(String(id)) || current === id) return;
+  if (!/^0[1-9]$/.test(String(id)) || Number(id) > 5 || current === id) return;
   current = id;
   slide.src = "assets/slides/" + id + ".png";
   slide.alt = "Слайд " + id;
+  if (location.hash !== "#s=" + id) history.replaceState(null, "", "#s=" + id);
 }
-
 slide.addEventListener("error", () => { error.hidden = false; });
 slide.addEventListener("load", () => { error.hidden = true; });
-channel?.addEventListener("message", (event) => {
-  if (event.data?.type === "STATE") show(event.data.id);
+window.addEventListener("message", (event) => {
+  if (!window.opener || event.source !== window.opener) return;
+  const data = event.data || {};
+  if (data.channel === MSG_TAG && data.type === "STATE") show(data.id);
 });
-window.addEventListener("storage", (event) => {
-  if (event.key === KEY_SLIDE && event.newValue) show(event.newValue);
-});
-show(localStorage.getItem(KEY_SLIDE) || "01");
-channel?.postMessage({ type: "HELLO", from: "audience" });
-function heartbeat() { channel?.postMessage({ type: "VIEWER_ALIVE" }); }
-setInterval(heartbeat, 2500);
-heartbeat();
+function signal(type) {
+  try {
+    if (window.opener && !window.opener.closed) {
+      window.opener.postMessage({ channel: MSG_TAG, type, from: "audience" }, targetOrigin);
+    }
+  } catch (_) {}
+}
+const initial = location.hash.match(/^#s=(0[1-5])$/);
+show(initial?.[1] || "01");
+signal("HELLO");
+setInterval(() => signal("VIEWER_ALIVE"), 2500);
