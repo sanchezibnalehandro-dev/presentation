@@ -6,7 +6,7 @@ const error = document.getElementById("viewerError");
 let current = null;
 const targetOrigin = location.protocol === "file:" ? "*" : location.origin;
 function show(id) {
-  if (!/^0[1-9]$/.test(String(id)) || Number(id) > 5 || current === id) return;
+  if (!/^(0[1-9]|1[0-9]|2[0-5])$/.test(String(id)) || current === id) return;
   current = id;
   slide.src = "assets/slides/" + id + ".png";
   slide.alt = "Слайд " + id;
@@ -26,7 +26,7 @@ function signal(type) {
     }
   } catch (_) {}
 }
-const initial = location.hash.match(/^#s=(0[1-5])$/);
+const initial = location.hash.match(/^#s=(0[1-9]|1[0-9]|2[0-5])$/);
 show(initial?.[1] || "01");
 signal("HELLO");
 setInterval(() => signal("VIEWER_ALIVE"), 2500);
