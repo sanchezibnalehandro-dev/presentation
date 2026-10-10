@@ -65,3 +65,11 @@ a{color:#add5fc}
 @media(max-width:1200px){.main{grid-template-columns:minmax(300px,.38fr) minmax(0,.62fr)}.next-line{height:90px}.next-preview{height:66px}.time-pair strong{font-size:20px}.hint{display:none}}
 @media(max-width:850px){.shell{min-height:850px;height:auto;grid-template-rows:70px minmax(0,1fr) auto}.main{display:flex;flex-direction:column}.stage-main{min-height:340px}.notes-panel{min-height:400px;height:540px}.hint{display:none}.next-line{height:120px}.toolbar{flex-wrap:wrap}.meta{gap:8px}}
 @media(max-width:550px){.topbar{padding:8px 12px}.time-pair:nth-child(2){display:none}.brand h1{font-size:13px}.status{display:none}.main{padding:10px}.next-preview{height:74px}.control-btn{padding:10px 11px}.nav-select{max-width:150px}.toolbar{padding:10px}.notes-panel{height:600px}}
+
+/* Утверждённый сценический текст: речь крупная, ремарки приглушены */
+.speech-paragraph { margin:0 0 .72em; font-size:1em; line-height:1.60; color:#e8edf4; white-space:pre-wrap; overflow-wrap:anywhere; }
+.speech-paragraph strong { color:#f9d29e; font-weight:780; }
+.speech-paragraph.stage-direction { font-size:.81em; line-height:1.42; color:#91aabe; font-style:italic; margin:1.1em 0 1.05em; padding:0 0 0 11px; border-left:2px solid #597087; }
+.speech-paragraph.speech-cue { color:#f6c37e; margin:1.3em 0 .6em; }
+.speech-paragraph.speech-cue strong { color:#f6c37e; }
+.notes-scroll { padding-top:14px; }
