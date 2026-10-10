@@ -3,6 +3,25 @@ const KEY_SLIDE = "dn-slide-v1";
 const KEY_TIMER = "dn-timer-v1";
 const KEY_SIZE = "dn-note-size-v1";
 const TOTAL_MVP = 25;
+const QNA_URL = "https://qna.sanchez-ai.ru/ask.html?room=sanchez-live";
+const MATERIALS_URL = "https://drive.google.com/file/d/1OBWoRAMf7aH895DywvCFe5D0TKyRBD2c/view";
+const INTRO_SLIDE = { id: "00", title: "До начала · вопросы в Q&A", localImagePath: "" };
+const INTRO_NOTE = {id:"00",startMinute:0,endMinute:0,paragraphs:[
+  "*Показываем QR до первой картинки. Даём аудитории время открыть ссылку.*",
+  "Пока мы не начали, маленькая просьба. Если в процессе появляются вопросы, отправляйте их сюда. Не обязательно ждать конца. Ближе к финалу обязательно посмотрим, что вы написали.",
+  "*Не раскрываем авторство Q&A. После этого переключаемся на слайд 01 с антилопой.*"
+]};
+let finalQrVisible = false;
+function makeQr(id, url, size) {
+  if (typeof QRCode !== "function") throw new Error("QR-генератор не загрузился");
+  new QRCode($(id), { text:url, width:size, height:size, colorDark:"#07111e", colorLight:"#ffffff", correctLevel:QRCode.CorrectLevel.M });
+}
+function setFinalQr(visible) {
+  finalQrVisible = Boolean(visible) && slides[index]?.id === "25";
+  $("presenterFinalOverlay").hidden = !finalQrVisible;
+  $("showMaterials").textContent = finalQrVisible ? "↩ Убрать QR материалов" : "◈ Показать QR материалов";
+  sendToAudience({type:"FINAL_QR",visible: finalQrVisible});
+}
 
 const $ = (id) => document.getElementById(id);
 // An audience popup retains an opener reference even from local file:// pages.
@@ -17,7 +36,7 @@ function sendToAudience(payload) {
   audienceWindow.postMessage({ ...payload, channel: MSG_TAG }, targetOrigin);
 }
 function readSavedSlide() {
-  const hash = location.hash.match(/^#s=(0[1-9]|1[0-9]|2[0-5])$/);
+  const hash = location.hash.match(/^#s=(00|0[1-9]|1[0-9]|2[0-5])$/);
   return hash?.[1] || storage.get(KEY_SLIDE);
 }
 
@@ -68,6 +87,7 @@ function pushState() {
   // Hash survives refresh even when browsers disable localStorage on file://.
   if (location.hash !== "#s=" + id) history.replaceState(null, "", "#s=" + id);
   sendToAudience({ type: "STATE", id });
+  sendToAudience({ type:"FINAL_QR",visible:finalQrVisible });
 }
 function formatInline(paragraph) {
   const fragment = document.createDocumentFragment();
@@ -108,9 +128,16 @@ function render() {
   if (!slides.length) return;
   const slide = slides[index];
   const next = slides[index + 1] ?? null;
-  $("currentImage").src = slide.localImagePath;
+  const isIntro = slide.id === "00";
+  $("currentImage").hidden = isIntro;
+  $("introPreview").hidden = !isIntro;
+  if (!isIntro) $("currentImage").src = slide.localImagePath;
   $("currentImage").alt = slide.title;
-  $("slideNumber").textContent = `${slide.id} / ${formatId(slides.length)}`;
+  $("showMaterials").hidden = slide.id !== "25";
+  finalQrVisible = false;
+  $("presenterFinalOverlay").hidden = true;
+  $("showMaterials").textContent = "◈ Показать QR материалов";
+  $("slideNumber").textContent = `${slide.id} / ${formatId(TOTAL_MVP)}`;
   $("currentTitle").textContent = slide.title;
   $("timingLabel").textContent = timeline(notes.get(slide.id));
   $("nextImage").hidden = !next;
@@ -147,7 +174,7 @@ function keyHandler(ev) {
 }
 function showAudience() {
   const url = new URL("audience.html", window.location.href);
-  url.hash = "s=" + (slides[index]?.id || "01");
+  url.hash = "s=" + (slides[index]?.id || "00");
   audienceWindow = window.open(url.toString(), "dn_audience", "width=1280,height=720");
   if (!audienceWindow) {
     showError("Браузер заблокировал окно. Разреши всплывающие окна для этой страницы и нажми ещё раз.");
@@ -163,12 +190,15 @@ function boot() {
     const manifest = window.__DECK_MANIFEST__;
     const notebook = window.__NOTES_DATA__;
     if (!manifest?.slides || !notebook?.notes) throw Error("Не загружены data/slides-data.js или content/notes-data.js");
-    slides = manifest.slides.slice(0, TOTAL_MVP);
+    slides = [INTRO_SLIDE, ...manifest.slides.slice(0, TOTAL_MVP)];
     notes = new Map(notebook.notes.map((note) => [note.id, note]));
-    if (slides.length !== TOTAL_MVP) throw Error("В манифесте должны быть все 25 слайдов");
+    notes.set("00", INTRO_NOTE);
+    if (slides.length !== TOTAL_MVP + 1) throw Error("В манифесте должны быть все 25 слайдов");
     for (const s of slides) {
       if (!notes.has(s.id)) throw Error("Отсутствуют заметки для слайда " + s.id);
     }
+    makeQr("presenterIntroQr", QNA_URL, 142);
+    makeQr("presenterFinalQr", MATERIALS_URL, 148);
     const saved = readSavedSlide();
     index = Math.max(0, slides.findIndex((s) => s.id === saved));
     for (const slide of slides) {
@@ -188,6 +218,7 @@ $("prev").addEventListener("click", () => moveTo(index - 1));
 $("next").addEventListener("click", () => moveTo(index + 1));
 $("jump").addEventListener("change", (e) => moveTo(slides.findIndex((s) => s.id === e.target.value)));
 $("openAudience").addEventListener("click", showAudience);
+$("showMaterials").addEventListener("click", () => setFinalQr(!finalQrVisible));
 $("toggleTimer").addEventListener("click", () => {
   if (timer.startedAt === null) timer.startedAt = Date.now();
   else { timer.accumulated += Date.now() - timer.startedAt; timer.startedAt = null; }
