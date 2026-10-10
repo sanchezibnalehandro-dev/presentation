@@ -5,10 +5,13 @@
 <meta name="theme-color" content="#000000">
 <title>Цифровые неандертальцы · экран аудитории</title>
 <link rel="stylesheet" href="styles.css">
+<script src="vendor/qrcode.min.js" defer></script>
 <script src="audience.js" defer></script>
 </head>
 <body class="audience">
 <img id="slide" src="assets/slides/01.png" alt="Слайд 01">
+<section id="introScene" class="intro-scene" hidden aria-label="Вопросы к спикеру"><div class="intro-scene-inner"><div class="intro-kicker">ЦИФРОВЫЕ НЕАНДЕРТАЛЬЦЫ</div><h1>ВОПРОСЫ К СПИКЕРУ</h1><p>Не ждите конца выступления.<br>Присылайте вопросы по ходу встречи.</p><div class="qr-white" id="audienceIntroQr"></div><p class="intro-link">qna.sanchez-ai.ru/ask.html?room=sanchez-live</p></div></section>
+<section id="finalMaterials" class="final-materials" hidden aria-label="Материалы выступления"><div class="final-card"><div class="intro-kicker">СПАСИБО ЗА ВНИМАНИЕ</div><h2>МАТЕРИАЛЫ ВЫСТУПЛЕНИЯ</h2><p>Исследования, ссылки и полезные промпты в одном PDF.</p><div class="qr-white" id="audienceFinalQr"></div><p>Сканируйте QR и сохраните памятку</p></div></section>
 <div id="viewerError" class="viewer-error" hidden>Изображение недоступно. Проверь локальные файлы презентации.</div>
 </body>
 </html>
