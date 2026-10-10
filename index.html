@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="styles.css">
   <script src="data/slides-data.js" defer></script>
   <script src="content/notes-data.js" defer></script>
+  <script src="vendor/qrcode.min.js" defer></script>
   <script src="presenter.js" defer></script>
 </head>
 <body>
@@ -34,10 +35,12 @@
         <div class="panel stage-main">
           <div class="panel-head">
             <span class="panel-title">Сейчас на экране аудитории</span>
-            <span class="slide-count" id="slideNumber">01 / 05</span>
+            <span class="slide-count" id="slideNumber">01 / 25</span>
           </div>
           <div class="slide-box">
             <img id="currentImage" alt="Текущий слайд" src="assets/slides/01.png">
+            <div id="introPreview" class="intro-preview" hidden><span class="intro-label">ЦИФРОВЫЕ НЕАНДЕРТАЛЬЦЫ</span><strong>ВОПРОСЫ К СПИКЕРУ</strong><span>Сканируйте QR. Отправляйте вопросы в течение выступления.</span><div class="qr-white" id="presenterIntroQr"></div></div>
+            <div id="presenterFinalOverlay" class="presenter-final-overlay" hidden><strong>МАТЕРИАЛЫ ВЫСТУПЛЕНИЯ</strong><div class="qr-white" id="presenterFinalQr"></div><small>PDF на Google Диске</small></div>
           </div>
           <div class="caption-line">
             <span id="currentTitle">Мы всё ещё едим сырую антилопу</span>
@@ -73,6 +76,7 @@
       <div class="small-controls">
         <button type="button" id="toggleTimer" class="control-btn text-only">▶ Таймер</button>
         <button type="button" id="resetTimer" class="control-btn text-only" title="Сбросить таймер">Сброс</button>
+        <button type="button" id="showMaterials" class="control-btn" hidden>◈ Показать QR материалов</button>
         <button type="button" id="openAudience" class="control-btn">↗ Экран аудитории</button>
       </div>
       <span class="hint">← → / Space · Home / End · F11 на проекторе</span>
