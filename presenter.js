@@ -2,7 +2,7 @@ const CHANNEL = "digital-neanderthals-stage-v1";
 const KEY_SLIDE = "dn-slide-v1";
 const KEY_TIMER = "dn-timer-v1";
 const KEY_SIZE = "dn-note-size-v1";
-const TOTAL_MVP = 5;
+const TOTAL_MVP = 25;
 
 const $ = (id) => document.getElementById(id);
 // An audience popup retains an opener reference even from local file:// pages.
@@ -69,28 +69,39 @@ function pushState() {
   if (location.hash !== "#s=" + id) history.replaceState(null, "", "#s=" + id);
   sendToAudience({ type: "STATE", id });
 }
-function createSection(section) {
-  const wrap = document.createElement("section");
-  wrap.className = "note-section";
-  const heading = document.createElement("h3");
-  heading.className = "note-label";
-  heading.textContent = section.label;
-  const text = document.createElement("p");
-  text.className = "note-copy";
-  text.textContent = section.text;
-  wrap.append(heading, text);
-  return wrap;
+function formatInline(paragraph) {
+  const fragment = document.createDocumentFragment();
+  for (const part of paragraph.split(/(\\*\\*[^*]+\\*\\*|\\*[^*]+\\*)/g)) {
+    if (!part) continue;
+    if (part.startsWith("**") && part.endsWith("**")) {
+      const node = document.createElement("strong");
+      node.textContent = part.slice(2, -2);
+      fragment.append(node);
+    } else if (part.startsWith("*") && part.endsWith("*")) {
+      const node = document.createElement("em");
+      node.textContent = part.slice(1, -1);
+      fragment.append(node);
+    } else fragment.append(document.createTextNode(part));
+  }
+  return fragment;
 }
 function renderNotes(slide) {
   const panel = $("notesScroll");
   panel.replaceChildren();
   const note = notes.get(slide.id);
   panel.style.fontSize = currentNoteSize + "px";
-  if (!note) {
-    panel.textContent = "Для этого слайда заметки пока не импортированы.";
+  if (!note?.paragraphs) {
+    panel.textContent = "Сценарий для этого слайда отсутствует.";
     return;
   }
-  for (const section of note.sections) panel.append(createSection(section));
+  for (const paragraph of note.paragraphs) {
+    const el = document.createElement("p");
+    el.className = "speech-paragraph";
+    if (/^\\*[^*][\\s\\S]*\\*$/.test(paragraph)) el.classList.add("stage-direction");
+    if (/^\\*\\*[^*][\\s\\S]*\\*\\*:?$/.test(paragraph)) el.classList.add("speech-cue");
+    el.append(formatInline(paragraph));
+    panel.append(el);
+  }
   panel.scrollTop = 0;
 }
 function render() {
@@ -107,8 +118,8 @@ function render() {
     $("nextImage").src = next.localImagePath;
     $("nextImage").alt = next.title;
   }
-  $("nextTitle").textContent = next?.title || "Конец пятислайдового MVP";
-  $("nextTiming").textContent = next ? timeline(notes.get(next.id)) : "Остальные слайды подключим после проверки";
+  $("nextTitle").textContent = next?.title || "Конец выступления";
+  $("nextTiming").textContent = next ? timeline(notes.get(next.id)) : "";
   $("prev").disabled = index === 0;
   $("next").disabled = index === slides.length - 1;
   $("jump").value = slide.id;
@@ -154,7 +165,7 @@ function boot() {
     if (!manifest?.slides || !notebook?.notes) throw Error("Не загружены data/slides-data.js или content/notes-data.js");
     slides = manifest.slides.slice(0, TOTAL_MVP);
     notes = new Map(notebook.notes.map((note) => [note.id, note]));
-    if (slides.length !== TOTAL_MVP) throw Error("Для MVP не хватает первых пяти записей в манифесте");
+    if (slides.length !== TOTAL_MVP) throw Error("В манифесте должны быть все 25 слайдов");
     for (const s of slides) {
       if (!notes.has(s.id)) throw Error("Отсутствуют заметки для слайда " + s.id);
     }
