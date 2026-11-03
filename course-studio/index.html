@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>COURSE STUDIO · пульт записи</title><link rel="stylesheet" href="studio.css">
+<script src="frame.js" defer></script><script src="studio.js" defer></script></head>
+<body class="presenter">
+<div class="app">
+<header class="top"><div class="identity"><span class="symbol">◈</span><div><small>САНЧЕЗ / PRODUCTION</small><h1>COURSE STUDIO <span>01</span></h1></div></div>
+<div class="topright"><span id="source" class="chip">Демо-данные</span><span id="connection" class="chip warn">Экран не открыт</span><div class="clock"><small>ЗАПИСЬ</small><strong id="clock">00:00</strong></div></div></header>
+<div class="work">
+<section class="left"><div class="card now"><div class="sectionbar"><span>КАДР В ЗАПИСИ</span><strong id="counter">01 / 03</strong></div><div id="preview" class="frame preview" aria-label="Предпросмотр зрительского кадра"></div><div class="framecaption"><strong id="cueTitle"></strong><span id="cueTime"></span></div></div>
+<div class="card upcoming"><span class="eyebrow">СЛЕДУЮЩИЙ КАДР</span><strong id="nextTitle">—</strong><p id="nextType"></p></div>
+<div class="card map"><span class="eyebrow">УРОК И МАРШРУТ</span><label class="sr" for="lesson">Выбрать урок</label><select id="lesson"></select>
+<div class="cuepills" id="cuePills" aria-label="Кадры текущего урока"></div></div></section>
+<section class="card notes"><div class="noteshead"><div><span class="eyebrow">ТОЛЬКО ДЛЯ ВЕДУЩЕГО</span><h2>Суфлёр и режиссура</h2></div><div class="textsizes"><button id="smaller" type="button" aria-label="Уменьшить шрифт">A−</button><button id="larger" type="button" aria-label="Увеличить шрифт">A+</button></div></div>
+<div class="notesbody" id="notesbody" tabindex="0"><div class="cuehead" id="noteCue"></div><div class="cueblock"><span class="eyebrow accent">ГОВОРЮ / СУФЛЁР</span><div id="speech" class="speech"></div></div><div class="cueblock"><span class="eyebrow">НА ЭКРАНЕ / ДЕЙСТВИЕ</span><p id="action"></p></div><div class="cueblock"><span class="eyebrow">РЕЖИССЁРСКАЯ ЗАМЕТКА</span><p id="production"></p></div><div class="cueblock"><span class="eyebrow">КРИТЕРИЙ ПЕРЕХОДА</span><p id="check"></p></div></div>
+</section></div>
+<footer class="bottom"><div class="nav"><button id="prev" type="button">← Назад</button><button id="next" class="primary" type="button">Дальше →</button><button id="blackout" type="button" aria-pressed="false">■ Чёрный экран</button></div>
+<div class="actions"><button id="timer" type="button">▶ Таймер</button><button id="reset" type="button">↺ Сброс</button><label class="filebutton" for="jsonfile">↑ Загрузить сценарий</label><input id="jsonfile" type="file" accept=".json,application/json"><button id="open" type="button">↗ Экран записи</button></div>
+<div class="keyboard">← → / Space · Home / End</div></footer>
+</div>
+<div id="alert" role="alert" class="alert" hidden></div>
+</body></html>
