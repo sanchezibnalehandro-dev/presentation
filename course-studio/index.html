@@ -6,17 +6,33 @@
 <div class="app">
 <header class="top"><div class="identity"><span class="symbol">◈</span><div><small>САНЧЕЗ / PRODUCTION</small><h1>COURSE STUDIO <span>01</span></h1></div></div>
 <div class="topright"><span id="source" class="chip">Демо-данные</span><span id="connection" class="chip warn">Экран не открыт</span><div class="clock"><small>ЗАПИСЬ</small><strong id="clock">00:00</strong></div></div></header>
-<div class="work">
+<div class="work" id="workArea">
 <section class="left"><div class="card now"><div class="sectionbar"><span>КАДР В ЗАПИСИ</span><strong id="counter">01 / 03</strong></div><div id="preview" class="frame preview" aria-label="Предпросмотр зрительского кадра"></div><div class="framecaption"><strong id="cueTitle"></strong><span id="cueTime"></span></div></div>
 <div class="card upcoming"><span class="eyebrow">СЛЕДУЮЩИЙ КАДР</span><div class="nextrow"><div id="nextPreview" class="frame nextpreview" aria-label="Предпросмотр следующего кадра"></div><div class="nexttext"><strong id="nextTitle">—</strong><p id="nextType"></p></div></div></div>
 <div class="card map"><span class="eyebrow">УРОК И МАРШРУТ</span><label class="sr" for="lesson">Выбрать урок</label><select id="lesson"></select>
 <div class="cuepills" id="cuePills" aria-label="Кадры текущего урока"></div></div></section>
-<section class="card notes"><div class="noteshead"><div><span class="eyebrow">ТОЛЬКО ДЛЯ ВЕДУЩЕГО</span><h2>Суфлёр и режиссура</h2></div><div class="textsizes"><button id="smaller" type="button" aria-label="Уменьшить шрифт">A−</button><button id="larger" type="button" aria-label="Увеличить шрифт">A+</button></div></div>
-<div class="notesbody" id="notesbody" tabindex="0"><div class="cuehead" id="noteCue"></div><div class="cueblock"><span class="eyebrow accent">ГОВОРЮ / СУФЛЁР</span><div id="speech" class="speech"></div></div><div class="cueblock"><span class="eyebrow">НА ЭКРАНЕ / ДЕЙСТВИЕ</span><p id="action"></p></div><div class="cueblock"><span class="eyebrow">РЕЖИССЁРСКАЯ ЗАМЕТКА</span><p id="production"></p></div><div class="cueblock"><span class="eyebrow">КРИТЕРИЙ ПЕРЕХОДА</span><p id="check"></p></div></div>
+<div id="panelDivider" class="panel-divider" role="separator" aria-orientation="vertical" aria-label="Настроить ширину слайдов и суфлёра" aria-valuemin="26" aria-valuemax="72" aria-valuenow="40" tabindex="0" title="Перетащи для изменения ширины. Двойной клик — сброс."><span aria-hidden="true"></span></div>
+<section class="card notes" aria-label="Суфлёр ведущего">
+<div class="noteshead"><div><span class="eyebrow">ТЕКСТ ДЛЯ ЗАПИСИ</span><h2>Суфлёр</h2></div>
+<div class="textsizes"><button id="smaller" type="button" aria-label="Уменьшить текст речи">A−</button><button id="larger" type="button" aria-label="Увеличить текст речи">A+</button></div></div>
+<div class="cuehead" id="noteCue"></div>
+<div class="notesbody" id="notesbody" tabindex="0" aria-label="Речь ведущего, читаемая вслух"><article id="speech" class="speech"></article></div>
+<aside id="actionPanel" class="action-panel" aria-label="Служебные действия, не для озвучивания"><span class="eyebrow">ДЕЙСТВИЕ НА ЭКРАНЕ · НЕ ЧИТАТЬ</span><p id="action"></p></aside>
 </section></div>
 <footer class="bottom"><div class="nav"><button id="prev" type="button">← Назад</button><button id="next" class="primary" type="button">Дальше →</button><button id="blackout" type="button" aria-pressed="false">■ Чёрный экран</button></div>
-<div class="actions"><button id="timer" type="button">▶ Таймер</button><button id="reset" type="button">↺ Сброс</button><label class="filebutton" for="jsonfile" title="Локальный JSON с текстом ведущего">↑ Сценарий JSON</label><input id="jsonfile" type="file" accept=".json,application/json"><label class="filebutton" for="imagefiles" title="Выбрать PNG, JPG или WebP по порядку кадров">↑ Изображения</label><input id="imagefiles" type="file" accept="image/png,image/jpeg,image/webp,.png,.jpg,.jpeg,.webp" multiple><a class="help-link" href="README.md" target="_blank" rel="noopener">PDF/PPTX → PNG</a><button id="open" type="button">↗ Экран записи</button></div>
+<div class="actions"><button id="timer" type="button">▶ Таймер</button><button id="reset" type="button">↺ Сброс</button><label class="filebutton" for="jsonfile" title="Локальный JSON с текстом ведущего">↑ Сценарий JSON</label><input id="jsonfile" type="file" accept=".json,application/json"><label class="filebutton" for="imagefiles" title="Выбрать PNG, JPG или WebP по порядку кадров">↑ Изображения</label><input id="imagefiles" type="file" accept="image/png,image/jpeg,image/webp,.png,.jpg,.jpeg,.webp" multiple><button id="importHelp" type="button" title="Как конвертировать и загрузить презентацию">PDF/PPTX · помощь</button><button id="open" type="button">↗ Экран записи</button></div>
 <div class="keyboard">← → / Space · Home / End</div></footer>
 </div>
 <div id="alert" role="alert" class="alert" hidden></div>
+<dialog id="importGuide" class="import-dialog" aria-labelledby="importGuideTitle">
+<div class="guide-top"><div><span class="eyebrow">COURSE STUDIO · ИМПОРТ</span><h2 id="importGuideTitle">Как добавить презентацию</h2></div><button id="closeImportGuide" type="button" class="guide-close" aria-label="Закрыть">✕</button></div>
+<p class="guide-lead">Студия принимает готовые изображения. PDF и PPTX предварительно конвертируются в PNG на вашем компьютере, без передачи файлов в интернет.</p>
+<div class="guide-step"><strong>01 · Уже есть PNG или JPG</strong><p>Закрой это окно → «↑ Изображения» → выбери все слайды. Если загружен JSON с image-кадрами, количество картинок должно совпадать.</p></div>
+<div class="guide-step"><strong>02 · Есть PDF</strong><p>В комплекте уже есть локальный конвертер. В терминале из папки репозитория presentation:</p>
+<code>py -m pip install PyMuPDF</code><code>py course-studio/tools/prepare_deck.py "C:\Путь\Презентация.pdf" --slug my-deck</code>
+<p>После конвертации загрузи созданный deck.json кнопкой «↑ Сценарий JSON». PNG будут лежать в папке private-decks.</p></div>
+<div class="guide-step"><strong>03 · Есть PPTX</strong><p>В PowerPoint: «Файл → Сохранить как / Экспорт → PNG → Все слайды». После этого кнопка «↑ Изображения». Можно также экспортировать PPTX в PDF и использовать шаг 02. Для прямой обработки PPTX через скрипт нужен LibreOffice.</p></div>
+<p class="guide-caution">Прямой импорт PDF/PPTX в браузере пока не реализован. Эта кнопка открывает справку и не запускает конвертацию.</p>
+<div class="guide-bottom"><button id="closeImportGuideBottom" type="button">Понятно</button></div>
+</dialog>
 </body></html>

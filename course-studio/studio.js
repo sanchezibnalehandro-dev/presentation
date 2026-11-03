@@ -8,7 +8,7 @@ const demo={course:"ChatGPT от А до Я за 7 дней",lessons:[{id:"DEMO"
 {id:"S02",at:"00:25",title:"Визуальная схема",visual:{kind:"compare",headline:"Одна сцена. Две роли.",columns:[{title:"ЗРИТЕЛЬ",body:"Крупная мысль + наглядный кадр"},{title:"ВЕДУЩИЙ",body:"Суфлёр + действия + таймер"}],day:"ПРОВЕРКА / 02"},speech:["Слева показана идея для аудитории, а у меня отдельный подробный текст и подсказки."],action:"Проверить синхронность стрелок и обновления.",production:"Прокрутить заметки и убедиться, что изображение не меняется.",check:"Перейти к живой демонстрации."},
 {id:"S03",at:"01:00",title:"Переход к демонстрации",visual:{kind:"live",headline:"Демонстрация на экране",subline:"Переключи OBS или захват окна на настоящий ChatGPT.",day:"ПРОВЕРКА / 03"},speech:["Эта плашка служит переходом, а не поддельным интерфейсом сервиса."],action:"Переключить источник записи в OBS на настоящее окно ChatGPT.",production:"Презентация не встраивает ChatGPT и не подделывает его интерфейс.",check:"После демо вернуть источник и завершить."}
 ]}]};
-let data=demo,li=0,ci=0,blackout=false,popup=null,lastSeen=0,elapsed=0,started=null,size=19;
+let data=demo,li=0,ci=0,blackout=false,popup=null,lastSeen=0,elapsed=0,started=null,size=loadNumberPreference("fontSize",23);
 const localFiles = new Map(); // File values stay in the presenter tab, never in GitHub.
 const localUrls = new Map(); // URLs for previews; viewer gets cloned File via postMessage.
 let importedImages = false;
@@ -30,7 +30,9 @@ function redraw(){
  const next=l.cues[ci+1] || data.lessons[li+1]?.cues[0] || null;$("nextTitle").textContent=next?.title||"Конец урока";$("nextType").textContent=next?.at||"Переход к следующему уроку";
  CourseFrame.render($("nextPreview"),previewPayload(next));
  $("speech").replaceChildren();c.speech.forEach(p=>{let n=document.createElement("p");n.textContent=p;$("speech").append(n)});
- $("action").textContent=c.action||"—";$("production").textContent=c.production||"—";$("check").textContent=c.check||"—";
+ $("action").textContent=c.action||"";
+ $("actionPanel").hidden=!(typeof c.action==="string"&&c.action.trim());
+ $("speech").style.fontSize=size+"px";
  $("prev").disabled=li===0&&ci===0;$("next").disabled=li===data.lessons.length-1&&ci===total-1;
  $("blackout").setAttribute("aria-pressed",String(blackout));$("blackout").textContent=blackout?"□ Вернуть кадр":"■ Чёрный экран";
  $("notesbody").scrollTop=0;
@@ -45,8 +47,8 @@ $("prev").addEventListener("click",()=>move(-1));$("next").addEventListener("cli
 $("blackout").addEventListener("click",()=>{blackout=!blackout;redraw()});
 $("timer").addEventListener("click",()=>{if(started){elapsed+=Date.now()-started;started=null}else started=Date.now();tick()});
 $("reset").addEventListener("click",()=>{elapsed=0;started=null;tick()});
-$("smaller").addEventListener("click",()=>{size=Math.max(14,size-1);$("notesbody").style.fontSize=size+"px"});
-$("larger").addEventListener("click",()=>{size=Math.min(31,size+1);$("notesbody").style.fontSize=size+"px"});
+$("smaller").addEventListener("click",()=>{size=Math.max(16,size-1);$("speech").style.fontSize=size+"px";savePreference("fontSize",size)});
+$("larger").addEventListener("click",()=>{size=Math.min(42,size+1);$("speech").style.fontSize=size+"px";savePreference("fontSize",size)});
 $("jsonfile").addEventListener("change",async e=>{const f=e.target.files?.[0];if(!f)return;try{if(f.size>1e6)throw Error("Файл больше 1 МБ");const v=JSON.parse(await f.text());if(!validate(v))throw Error("Формат не соответствует схеме. Проверь README.");clearLocalImages();data=v;li=0;ci=0;blackout=false;sessionStorage.setItem(KEY,JSON.stringify(v));drawLessons();redraw();alertMessage("Сценарий загружен локально. Для приватных изображений нужен путь private-decks или повторный импорт PNG.");}catch(error){alertMessage("Ошибка сценария: "+error.message)}e.target.value=""});
 
 function clearLocalImages() {
@@ -107,7 +109,58 @@ $("imagefiles").addEventListener("change", e=>{
 });
 window.addEventListener("pagehide",clearLocalImages);
 
-document.addEventListener("keydown",e=>{const t=e.target;if(e.altKey||e.ctrlKey||e.metaKey||t instanceof HTMLElement&&(t.isContentEditable||["INPUT","TEXTAREA","SELECT","BUTTON"].includes(t.tagName)))return;if(["ArrowRight","PageDown"," "].includes(e.key)){e.preventDefault();move(1)}if(["ArrowLeft","PageUp"].includes(e.key)){e.preventDefault();move(-1)}if(e.key==="Home"){ci=0;redraw()}if(e.key==="End"){ci=data.lessons[li].cues.length-1;redraw()}});
+
+const PREF_KEY="course-studio-ui-v2-";
+function loadNumberPreference(name,fallback){
+  try{const raw=Number(localStorage.getItem(PREF_KEY+name));return Number.isFinite(raw)&&raw>0?raw:fallback}catch(_){return fallback}
+}
+function savePreference(name,value){try{localStorage.setItem(PREF_KEY+name,String(value))}catch(_){}}
+const workArea=$("workArea"),divider=$("panelDivider");
+let split=loadNumberPreference("leftWidth",40);
+function setSplit(value,persist=false){
+  const width=workArea.getBoundingClientRect().width||1400;
+  const min=Math.max(26,300/width*100),max=Math.min(72,(width-400)/width*100);
+  split=Math.round(Math.max(min,Math.min(max,value))*10)/10;
+  workArea.style.setProperty("--studio-left-width",split+"%");
+  divider.setAttribute("aria-valuenow",String(Math.round(split)));
+  if(persist)savePreference("leftWidth",split);
+}
+let dragging=false;
+divider.addEventListener("pointerdown",e=>{
+  if(e.button!==0)return;
+  dragging=true;divider.classList.add("dragging");
+  if(divider.setPointerCapture)divider.setPointerCapture(e.pointerId);
+  e.preventDefault();
+});
+divider.addEventListener("pointermove",e=>{
+  if(!dragging)return;
+  const bounds=workArea.getBoundingClientRect();
+  setSplit((e.clientX-bounds.left)/bounds.width*100);
+});
+function endDrag(){
+  if(!dragging)return;
+  dragging=false;divider.classList.remove("dragging");savePreference("leftWidth",split);
+}
+divider.addEventListener("pointerup",endDrag);
+divider.addEventListener("pointercancel",endDrag);
+divider.addEventListener("lostpointercapture",endDrag);
+divider.addEventListener("dblclick",()=>setSplit(40,true));
+divider.addEventListener("keydown",e=>{
+  let delta=0;
+  if(e.key==="ArrowLeft")delta=-(e.shiftKey?8:2);
+  if(e.key==="ArrowRight")delta=(e.shiftKey?8:2);
+  if(e.key==="Home"){setSplit(40,true);e.preventDefault();e.stopPropagation();return;}
+  if(!delta)return;
+  setSplit(split+delta,true);e.preventDefault();e.stopPropagation();
+});
+window.addEventListener("resize",()=>setSplit(split));
+setSplit(split);
+const importGuide=$("importGuide");
+$("importHelp").addEventListener("click",()=>importGuide.showModal());
+$("closeImportGuide").addEventListener("click",()=>importGuide.close());
+$("closeImportGuideBottom").addEventListener("click",()=>importGuide.close());
+
+document.addEventListener("keydown",e=>{const t=e.target;if(e.altKey||e.ctrlKey||e.metaKey||t instanceof HTMLElement&&(t.isContentEditable||t===divider||importGuide.open||["INPUT","TEXTAREA","SELECT","BUTTON"].includes(t.tagName)))return;if(["ArrowRight","PageDown"," "].includes(e.key)){e.preventDefault();move(1)}if(["ArrowLeft","PageUp"].includes(e.key)){e.preventDefault();move(-1)}if(e.key==="Home"){ci=0;redraw()}if(e.key==="End"){ci=data.lessons[li].cues.length-1;redraw()}});
 window.addEventListener("message",e=>{if(!popup||e.source!==popup||e.origin!==location.origin||e.data?.tag!==TAG)return;if(e.data.type==="HELLO"||e.data.type==="ALIVE"){lastSeen=Date.now();if(e.data.type==="HELLO")send()}});
 drawLessons();redraw();tick();setInterval(tick,1000);
 })();
