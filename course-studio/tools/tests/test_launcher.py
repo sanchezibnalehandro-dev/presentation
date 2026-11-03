@@ -68,15 +68,30 @@ class LauncherTests(TestCase):
                     start_server.assert_not_called()
 
     def test_port_busy_chooses_next(self):
-        busy_port = self.port
-        free_port = 8010 if busy_port != 8010 else 8009
+        busy_port, free_port = 8000, 8001
+        state = {"started": False}
+        def check(port):
+            return state["started"] and port == free_port
+        def launch(port):
+            self.assertEqual(port, free_port)
+            state["started"] = True
+            return type("FakeProcess", (), {"poll": lambda self: None})()
         with patch.object(launcher, "PORTS", [busy_port, free_port]):
             with patch.object(launcher, "port_in_use", side_effect=lambda p: p == busy_port):
-                with patch.object(launcher, "studio_is_running", side_effect=lambda p: p == busy_port):
-                    with patch.object(launcher, "open_studio"):
-                        with patch.object(launcher, "start_server") as start_server:
+                with patch.object(launcher, "studio_is_running", side_effect=check):
+                    with patch.object(launcher, "open_studio") as open_studio:
+                        with patch.object(launcher, "start_server", side_effect=launch) as start_server:
                             self.assertEqual(launcher.main(), 0)
-                            start_server.assert_not_called()
+                            start_server.assert_called_once_with(free_port)
+                            open_studio.assert_called_once_with(free_port)
+
+    def test_no_free_port_fails_without_launching(self):
+        with patch.object(launcher, "PORTS", [8000, 8001]):
+            with patch.object(launcher, "studio_is_running", return_value=False):
+                with patch.object(launcher, "port_in_use", return_value=True):
+                    with patch.object(launcher, "start_server") as start_server:
+                        self.assertEqual(launcher.main(), 1)
+                        start_server.assert_not_called()
 
 
 if __name__ == "__main__":
