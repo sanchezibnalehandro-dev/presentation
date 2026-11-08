@@ -19,7 +19,7 @@ function viewPayload(c){const v=c?.visual||c?.view||{};return {kind:v.kind||v.mo
 function previewPayload(c){const payload=viewPayload(c);if(c && localUrls.has(c.id))payload.src=localUrls.get(c.id);return payload;}
 function send(){if(!popup||popup.closed)return;const cue=current();const file=localFiles.get(cue.id)||null;popup.postMessage({tag:TAG,type:"FRAME",visual:viewPayload(cue),file,blackout},location.origin)}
 function alertMessage(msg){$("alert").textContent=msg;$("alert").hidden=false;setTimeout(()=>{$("alert").hidden=true},5500)}
-function drawLessons(){const select=$("lesson");select.replaceChildren();data.lessons.forEach((l,i)=>{let opt=document.createElement("option");opt.value=String(i);opt.textContent=(l.id+" · "+l.title)+(l.status==="outline"?" [ПЛАН]":"");select.append(opt)});select.value=String(li)}
+function drawLessons(){const select=$("lesson");select.replaceChildren();data.lessons.forEach((l,i)=>{let opt=document.createElement("option");opt.value=String(i);const isEpisode=/^NIK-\d+$/.test(l.id)&&/^ЭПИЗОД\s+\d+\./.test(l.title);const readable=isEpisode?l.title.replace(/^ЭПИЗОД\s+(\d+)\.\s*/,"ЭПИЗОД $1 · "):(l.id+" · "+l.title);opt.textContent=readable+(l.status==="outline"?" [ПЛАН]":"");opt.title=l.title;select.append(opt)});select.value=String(li)}
 function redraw(){
  const l=data.lessons[li],c=current(),total=l.cues.length;
  $("source").textContent=importedImages?"Слайды загружены локально":data===demo?"Демо-данные":"Сценарий загружен локально";
@@ -38,7 +38,7 @@ function redraw(){
  CourseFrame.render($("nextPreview"),previewPayload(next));
  $("speech").replaceChildren();c.speech.forEach(p=>{let n=document.createElement("p");n.textContent=p;$("speech").append(n)});
  $("action").textContent=c.action||"";
- $("actionPanel").hidden=!(typeof c.action==="string"&&c.action.trim());
+ $("actionPanel").hidden=false;if(!c.action?.trim())$("action").textContent="В этом блоке отдельных режиссёрских действий нет.";
  $("speech").style.fontSize=size+"px";
  $("prev").disabled=li===0&&ci===0;$("next").disabled=li===data.lessons.length-1&&ci===total-1;
  $("blackout").setAttribute("aria-pressed",String(blackout));$("blackout").textContent=blackout?"□ Вернуть кадр":"■ Чёрный экран";
