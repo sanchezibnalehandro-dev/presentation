@@ -47,3 +47,18 @@
 .guide-bottom {text-align:right;padding:14px 28px 24px}
 .guide-bottom button {background:var(--copper);border:0;border-radius:9px;padding:11px 23px;color:#17202a;font-weight:750;cursor:pointer}
 @media(max-width:1000px){.work{display:flex;flex-direction:column}.panel-divider{display:none}.notes{min-height:440px;height:min(68vh,720px)}.bottom{flex-wrap:wrap;justify-content:center}}
+
+/* v2.4: three independent work areas and accurate episode progress */
+.work {grid-template-columns:minmax(0,var(--studio-left-width,28%)) 10px minmax(0,1fr) 10px minmax(0,var(--studio-action-width,26%));gap:9px}
+.work > .action-panel {display:flex;flex-direction:column;min-height:0;min-width:0;overflow:hidden;background:#182433;border-top:1px solid var(--line)}
+.work > .action-panel[hidden]{display:none!important}
+.work > .action-panel .action-head {display:flex;flex-direction:column;align-items:stretch;gap:5px;padding:18px 17px 13px;border-bottom:1px solid var(--line)}
+.work > .action-panel .action-scroll {min-height:0;flex:1;overflow:auto;padding:15px 17px 22px;overscroll-behavior:contain}
+.work > .action-panel .action-scroll p {font-size:14px;line-height:1.68;white-space:pre-wrap;overflow-wrap:anywhere;color:#e1e9f2;margin:0}
+.action-cue {font-size:11px;color:#a8b8c9;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.route-progress {display:flex;flex-wrap:wrap;justify-content:space-between;gap:6px;margin:8px 0 11px}
+.route-progress strong {font-size:11px;color:#dcb28e;letter-spacing:.05em;font-weight:750}
+.route-label {display:block;font-size:10px;letter-spacing:.11em;color:var(--muted);margin:9px 0 7px}
+.map .cuepills {max-height:114px;overflow:auto;gap:7px}
+.map .pill {min-width:32px;font-size:12px;padding:7px 9px}
+@media(max-width:1100px){.app{height:auto;min-height:100vh;grid-template-rows:76px 1fr auto}.work{display:flex;flex-direction:column}.panel-divider{display:none!important}.notes{min-height:480px;height:62vh}.work > .action-panel{height:38vh;min-height:260px;flex:none}.bottom{flex-wrap:wrap;justify-content:center}}
