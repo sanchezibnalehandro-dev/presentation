@@ -7,18 +7,21 @@
 <header class="top"><div class="identity"><span class="symbol">◈</span><div><small>САНЧЕЗ / PRODUCTION</small><h1>COURSE STUDIO <span>01</span></h1></div></div>
 <div class="topright"><span id="source" class="chip">Демо-данные</span><span id="connection" class="chip warn">Экран не открыт</span><div class="clock"><small>ЗАПИСЬ</small><strong id="clock">00:00</strong></div></div></header>
 <div class="work" id="workArea">
-<section class="left"><div class="card now"><div class="sectionbar"><span>КАДР В ЗАПИСИ</span><strong id="counter">01 / 03</strong></div><div id="preview" class="frame preview" aria-label="Предпросмотр зрительского кадра"></div><div class="framecaption"><strong id="cueTitle"></strong><span id="cueTime"></span></div></div>
+<section class="left"><div class="card now"><div class="sectionbar"><span>ПРОГРЕСС ПО СЦЕНАРИЮ</span><strong id="counter">01 / 03</strong></div><div id="preview" class="frame preview" aria-label="Предпросмотр зрительского кадра"></div><div class="framecaption"><strong id="cueTitle"></strong><span id="cueTime"></span></div></div>
 <div class="card upcoming"><span class="eyebrow">СЛЕДУЮЩИЙ КАДР</span><div class="nextrow"><div id="nextPreview" class="frame nextpreview" aria-label="Предпросмотр следующего кадра"></div><div class="nexttext"><strong id="nextTitle">—</strong><p id="nextType"></p></div></div></div>
-<div class="card map"><span class="eyebrow">УРОК И МАРШРУТ</span><label class="sr" for="lesson">Выбрать урок</label><select id="lesson"></select>
-<div class="cuepills" id="cuePills" aria-label="Кадры текущего урока"></div></div>
-<aside id="actionPanel" class="card action-panel" aria-label="Действия ведущего, не для озвучивания"><div class="action-head"><span class="eyebrow">ДЕЙСТВИЯ · НЕ ЧИТАТЬ</span></div><div class="action-scroll" tabindex="0" aria-label="Режиссёрские действия"><p id="action"></p></div></aside></section>
-<div id="panelDivider" class="panel-divider" role="separator" aria-orientation="vertical" aria-label="Настроить ширину слайдов и суфлёра" aria-valuemin="26" aria-valuemax="72" aria-valuenow="40" tabindex="0" title="Перетащи для изменения ширины. Двойной клик — сброс."><span aria-hidden="true"></span></div>
+<div class="card map"><span class="eyebrow">ЭПИЗОД И МАРШРУТ</span><label class="sr" for="lesson">Выбрать урок</label><select id="lesson"></select>
+<div class="route-progress" aria-live="polite"><strong id="episodeProgress">ЭПИЗОД 01 / 08</strong><strong id="cueProgress">БЛОК 01 / 01</strong></div><span class="route-label">БЛОКИ В ЭПИЗОДЕ</span><div class="cuepills" id="cuePills" aria-label="Блоки текущего эпизода"></div></div>
+</section>
+<div id="panelDivider" class="panel-divider" role="separator" aria-orientation="vertical" aria-label="Настроить ширину области кадров" aria-valuemin="20" aria-valuemax="50" aria-valuenow="28" tabindex="0" title="Перетащи для изменения ширины. Двойной клик — сброс."><span aria-hidden="true"></span></div>
 <section class="card notes" aria-label="Суфлёр ведущего">
 <div class="noteshead"><div><span class="eyebrow">ТЕКСТ ДЛЯ ЗАПИСИ</span><h2>Суфлёр</h2></div>
 <div class="textsizes"><button id="smaller" type="button" aria-label="Уменьшить текст речи">A−</button><button id="larger" type="button" aria-label="Увеличить текст речи">A+</button></div></div>
 <div class="cuehead" id="noteCue"></div>
 <div class="notesbody" id="notesbody" tabindex="0" aria-label="Речь ведущего, читаемая вслух"><article id="speech" class="speech"></article></div>
-</section></div>
+</section>
+<div id="actionDivider" class="panel-divider" role="separator" aria-orientation="vertical" aria-label="Настроить ширину блока режиссёрских действий" aria-valuemin="18" aria-valuemax="45" aria-valuenow="26" tabindex="0" title="Перетащи для изменения ширины действий. Двойной клик — сброс."><span aria-hidden="true"></span></div>
+<aside id="actionPanel" class="card action-panel" aria-label="Действия ведущего, не для озвучивания"><div class="action-head"><span class="eyebrow">ДЕЙСТВИЯ · НЕ ЧИТАТЬ</span><span id="actionCue" class="action-cue"></span></div><div class="action-scroll" tabindex="0" aria-label="Режиссёрские действия"><p id="action"></p></div></aside>
+</div>
 <footer class="bottom"><div class="nav"><button id="prev" type="button">← Назад</button><button id="next" class="primary" type="button">Дальше →</button><button id="blackout" type="button" aria-pressed="false">■ Чёрный экран</button></div>
 <div class="actions"><button id="timer" type="button">▶ Таймер</button><button id="reset" type="button">↺ Сброс</button><label class="filebutton" for="jsonfile" title="Локальный JSON с текстом ведущего">↑ Сценарий JSON</label><input id="jsonfile" type="file" accept=".json,application/json"><label class="filebutton" for="imagefiles" title="Выбрать PNG, JPG или WebP по порядку кадров">↑ Изображения</label><input id="imagefiles" type="file" accept="image/png,image/jpeg,image/webp,.png,.jpg,.jpeg,.webp" multiple><button id="importHelp" type="button" title="Как конвертировать и загрузить презентацию">PDF/PPTX · помощь</button><button id="open" type="button">↗ Экран записи</button></div>
 <div class="keyboard">← → / Space · Home / End</div></footer>
