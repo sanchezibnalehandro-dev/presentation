@@ -20,15 +20,19 @@
 .panel-divider {min-width:10px;border-radius:8px;background:#19283a;cursor:col-resize;display:flex;align-items:center;justify-content:center;touch-action:none;user-select:none;outline-offset:3px}
 .panel-divider span {width:4px;height:74px;max-height:32%;border-radius:12px;background:repeating-linear-gradient(to bottom,#7e9bb1 0 4px,transparent 4px 9px);opacity:.7}
 .panel-divider:hover,.panel-divider:focus-visible,.panel-divider.dragging {background:#31465b;outline:2px solid #deab7a}
-.notes {display:grid;grid-template-rows:auto auto minmax(0,1fr) auto;min-height:0}
+.notes {display:grid;grid-template-rows:auto auto minmax(0,1fr);min-height:0}
 .noteshead {padding:14px 22px 12px}
 .cuehead {font-size:12px;line-height:1.5;font-weight:650;color:#afbdd0;padding:10px 25px;border-bottom:1px solid #253647;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .notesbody {font-size:inherit;line-height:inherit;overflow-y:auto;overscroll-behavior:contain;padding:26px clamp(18px,2.3vw,42px) 65px;min-height:0}
 .speech {font-size:23px;line-height:1.72;max-width:63ch;margin-inline:auto;color:#f8f4ef;font-weight:400}
 .speech p {margin:0 0 1.05em;line-height:inherit;letter-spacing:0.005em;overflow-wrap:break-word}
-.action-panel {border-top:2px solid #bc8a5d;background:#25303d;padding:15px 24px 17px;max-height:31%;overflow:auto}
-.action-panel .eyebrow {color:#e7ba87;font-size:10px;letter-spacing:.15em}
-.action-panel p {margin:7px 0 0;font-size:14px;line-height:1.45;color:#d1dce6;white-space:pre-wrap}
+/* Independent director instructions card under the slide controls. */
+.left > .action-panel {display:flex;flex:1 1 150px;flex-direction:column;min-height:125px;max-height:none;overflow:hidden;border-top:2px solid #bc8a5d;background:#192534}
+.action-head {padding:13px 16px 10px;border-bottom:1px solid #304052;flex:none}
+.action-panel .eyebrow {color:#e7ba87;font-size:11px;letter-spacing:.15em}
+.action-scroll {min-height:0;flex:1;overflow-y:auto;overscroll-behavior:contain;padding:11px 16px 17px}
+.action-scroll p {margin:0;font-size:14px;line-height:1.55;color:#dce5ec;white-space:pre-wrap;overflow-wrap:anywhere}
+@media(max-width:900px){.left > .action-panel {flex:none;min-height:190px;max-height:300px}}
 .import-dialog {border:1px solid #53677c;border-radius:18px;padding:0;width:min(740px,calc(100vw - 28px));max-height:min(86vh,860px);overflow:auto;background:#131f2d;color:var(--text);box-shadow:0 30px 90px #000b}
 .import-dialog::backdrop {background:rgba(0,0,0,.72)}
 .guide-top {display:flex;justify-content:space-between;align-items:flex-start;gap:18px;padding:25px 28px 12px;border-bottom:1px solid var(--line)}
@@ -43,3 +47,18 @@
 .guide-bottom {text-align:right;padding:14px 28px 24px}
 .guide-bottom button {background:var(--copper);border:0;border-radius:9px;padding:11px 23px;color:#17202a;font-weight:750;cursor:pointer}
 @media(max-width:1000px){.work{display:flex;flex-direction:column}.panel-divider{display:none}.notes{min-height:440px;height:min(68vh,720px)}.bottom{flex-wrap:wrap;justify-content:center}}
+
+/* v2.4: three independent work areas and accurate episode progress */
+.work {grid-template-columns:minmax(0,var(--studio-left-width,28%)) 10px minmax(0,1fr) 10px minmax(0,var(--studio-action-width,26%));gap:9px}
+.work > .action-panel {display:flex;flex-direction:column;min-height:0;min-width:0;overflow:hidden;background:#182433;border-top:1px solid var(--line)}
+.work > .action-panel[hidden]{display:none!important}
+.work > .action-panel .action-head {display:flex;flex-direction:column;align-items:stretch;gap:5px;padding:18px 17px 13px;border-bottom:1px solid var(--line)}
+.work > .action-panel .action-scroll {min-height:0;flex:1;overflow:auto;padding:15px 17px 22px;overscroll-behavior:contain}
+.work > .action-panel .action-scroll p {font-size:14px;line-height:1.68;white-space:pre-wrap;overflow-wrap:anywhere;color:#e1e9f2;margin:0}
+.action-cue {font-size:11px;color:#a8b8c9;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.route-progress {display:flex;flex-wrap:wrap;justify-content:space-between;gap:6px;margin:8px 0 11px}
+.route-progress strong {font-size:11px;color:#dcb28e;letter-spacing:.05em;font-weight:750}
+.route-label {display:block;font-size:10px;letter-spacing:.11em;color:var(--muted);margin:9px 0 7px}
+.map .cuepills {max-height:114px;overflow:auto;gap:7px}
+.map .pill {min-width:32px;font-size:12px;padding:7px 9px}
+@media(max-width:1100px){.app{height:auto;min-height:100vh;grid-template-rows:76px 1fr auto}.work{display:flex;flex-direction:column}.panel-divider{display:none!important}.notes{min-height:480px;height:62vh}.work > .action-panel{height:38vh;min-height:260px;flex:none}.bottom{flex-wrap:wrap;justify-content:center}}

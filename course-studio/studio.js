@@ -19,24 +19,31 @@ function viewPayload(c){const v=c?.visual||c?.view||{};return {kind:v.kind||v.mo
 function previewPayload(c){const payload=viewPayload(c);if(c && localUrls.has(c.id))payload.src=localUrls.get(c.id);return payload;}
 function send(){if(!popup||popup.closed)return;const cue=current();const file=localFiles.get(cue.id)||null;popup.postMessage({tag:TAG,type:"FRAME",visual:viewPayload(cue),file,blackout},location.origin)}
 function alertMessage(msg){$("alert").textContent=msg;$("alert").hidden=false;setTimeout(()=>{$("alert").hidden=true},5500)}
-function drawLessons(){const select=$("lesson");select.replaceChildren();data.lessons.forEach((l,i)=>{let opt=document.createElement("option");opt.value=String(i);opt.textContent=(l.id+" · "+l.title)+(l.status==="outline"?" [ПЛАН]":"");select.append(opt)});select.value=String(li)}
+function drawLessons(){const select=$("lesson");select.replaceChildren();data.lessons.forEach((l,i)=>{let opt=document.createElement("option");opt.value=String(i);const isEpisode=/^NIK-\d+$/.test(l.id)&&/^ЭПИЗОД\s+\d+\./.test(l.title);const readable=isEpisode?l.title.replace(/^ЭПИЗОД\s+(\d+)\.\s*/,"ЭПИЗОД $1 · "):(l.id+" · "+l.title);opt.textContent=readable+(l.status==="outline"?" [ПЛАН]":"");opt.title=l.title;select.append(opt)});select.value=String(li)}
 function redraw(){
  const l=data.lessons[li],c=current(),total=l.cues.length;
  $("source").textContent=importedImages?"Слайды загружены локально":data===demo?"Демо-данные":"Сценарий загружен локально";
- $("counter").textContent=String(ci+1).padStart(2,"0")+" / "+String(total).padStart(2,"0");
- $("cueTitle").textContent=c.title;$("cueTime").textContent=c.at||"";
+ const overall=data.lessons.reduce((n,x)=>n+x.cues.length,0);
+  const globalIndex=data.lessons.slice(0,li).reduce((n,x)=>n+x.cues.length,0)+ci+1;
+  const fmt=n=>String(n).padStart(2,"0");
+  const type=/^NIK-\d+$/.test(l.id)&&/ЭПИЗОД/.test(l.title)?"ЭПИЗОД":"РАЗДЕЛ";
+  $("counter").textContent=fmt(globalIndex)+" / "+fmt(overall);
+  $("episodeProgress").textContent=type+" "+fmt(li+1)+" / "+fmt(data.lessons.length);
+  $("cueProgress").textContent="БЛОК "+fmt(ci+1)+" / "+fmt(total);
+ $("cueTitle").textContent=c.title;$("cueTime").textContent=c.at?"ОТ НАЧАЛА · "+c.at:"";
+  $("actionCue").textContent="БЛОК "+fmt(ci+1)+" / "+fmt(total)+" · "+c.title;
  $("noteCue").textContent=l.id+" · "+l.title+" / "+c.title;
  CourseFrame.render($("preview"),previewPayload(c),blackout);
  const next=l.cues[ci+1] || data.lessons[li+1]?.cues[0] || null;$("nextTitle").textContent=next?.title||"Конец урока";$("nextType").textContent=next?.at||"Переход к следующему уроку";
  CourseFrame.render($("nextPreview"),previewPayload(next));
  $("speech").replaceChildren();c.speech.forEach(p=>{let n=document.createElement("p");n.textContent=p;$("speech").append(n)});
  $("action").textContent=c.action||"";
- $("actionPanel").hidden=!(typeof c.action==="string"&&c.action.trim());
+ $("actionPanel").hidden=false;if(!c.action?.trim())$("action").textContent="В этом блоке отдельных режиссёрских действий нет.";
  $("speech").style.fontSize=size+"px";
  $("prev").disabled=li===0&&ci===0;$("next").disabled=li===data.lessons.length-1&&ci===total-1;
  $("blackout").setAttribute("aria-pressed",String(blackout));$("blackout").textContent=blackout?"□ Вернуть кадр":"■ Чёрный экран";
  $("notesbody").scrollTop=0;
- const pills=$("cuePills");pills.replaceChildren();l.cues.forEach((x,i)=>{const b=document.createElement("button");b.className="pill"+(i===ci?" active":"");b.title=x.title;b.textContent=String(i+1).padStart(2,"0");b.addEventListener("click",()=>{ci=i;redraw()});pills.append(b)});
+ const pills=$("cuePills");pills.replaceChildren();l.cues.forEach((x,i)=>{const b=document.createElement("button");b.className="pill"+(i===ci?" active":"");b.title="Блок "+(i+1)+": "+x.title;b.setAttribute("aria-label","Блок "+(i+1)+" из "+l.cues.length+": "+x.title);b.setAttribute("aria-current",i===ci?"step":"false");b.textContent=String(i+1).padStart(2,"0");b.addEventListener("click",()=>{ci=i;redraw()});pills.append(b)});
  $("lesson").value=String(li);history.replaceState(null,"","#"+encodeURIComponent(l.id)+"-"+String(ci+1));send();
 }
 function move(d){const l=data.lessons[li];if(ci+d>=0&&ci+d<l.cues.length){ci+=d}else if(d>0&&li<data.lessons.length-1){li++;ci=0}else if(d<0&&li>0){li--;ci=data.lessons[li].cues.length-1}else return;redraw()}
@@ -115,52 +122,81 @@ function loadNumberPreference(name,fallback){
   try{const raw=Number(localStorage.getItem(PREF_KEY+name));return Number.isFinite(raw)&&raw>0?raw:fallback}catch(_){return fallback}
 }
 function savePreference(name,value){try{localStorage.setItem(PREF_KEY+name,String(value))}catch(_){}}
-const workArea=$("workArea"),divider=$("panelDivider");
-let split=loadNumberPreference("leftWidth",40);
-function setSplit(value,persist=false){
-  const width=workArea.getBoundingClientRect().width||1400;
-  const min=Math.max(26,300/width*100),max=Math.min(72,(width-400)/width*100);
-  split=Math.round(Math.max(min,Math.min(max,value))*10)/10;
-  workArea.style.setProperty("--studio-left-width",split+"%");
-  divider.setAttribute("aria-valuenow",String(Math.round(split)));
-  if(persist)savePreference("leftWidth",split);
+const workArea=$("workArea");
+const leftDivider=$("panelDivider"),actionDivider=$("actionDivider");
+const LAYOUT_DEFAULT={left:28,actions:26};
+let leftWidth=loadNumberPreference("leftWidth",LAYOUT_DEFAULT.left);
+let actionsWidth=loadNumberPreference("actionWidth",LAYOUT_DEFAULT.actions);
+const clamp=(value,min,max)=>Math.min(max,Math.max(min,value));
+function layoutBounds(){
+  const width=workArea.getBoundingClientRect().width||1500;
+  return {leftMin:Math.max(21,270/width*100),actionMin:Math.max(19,250/width*100),speechMin:Math.max(32,430/width*100)};
 }
-let dragging=false;
-divider.addEventListener("pointerdown",e=>{
-  if(e.button!==0)return;
-  dragging=true;divider.classList.add("dragging");
-  if(divider.setPointerCapture)divider.setPointerCapture(e.pointerId);
-  e.preventDefault();
-});
-divider.addEventListener("pointermove",e=>{
-  if(!dragging)return;
-  const bounds=workArea.getBoundingClientRect();
-  setSplit((e.clientX-bounds.left)/bounds.width*100);
-});
-function endDrag(){
-  if(!dragging)return;
-  dragging=false;divider.classList.remove("dragging");savePreference("leftWidth",split);
+function applyWidths(persistName=null){
+  const bounds=layoutBounds();
+  actionsWidth=clamp(actionsWidth,bounds.actionMin,100-bounds.leftMin-bounds.speechMin);
+  leftWidth=clamp(leftWidth,bounds.leftMin,100-actionsWidth-bounds.speechMin);
+  leftWidth=Math.round(leftWidth*10)/10;
+  actionsWidth=Math.round(actionsWidth*10)/10;
+  workArea.style.setProperty("--studio-left-width",leftWidth+"%");
+  workArea.style.setProperty("--studio-action-width",actionsWidth+"%");
+  leftDivider.setAttribute("aria-valuenow",String(Math.round(leftWidth)));
+  actionDivider.setAttribute("aria-valuenow",String(Math.round(actionsWidth)));
+  if(persistName==="leftWidth")savePreference("leftWidth",leftWidth);
+  if(persistName==="actionWidth")savePreference("actionWidth",actionsWidth);
 }
-divider.addEventListener("pointerup",endDrag);
-divider.addEventListener("pointercancel",endDrag);
-divider.addEventListener("lostpointercapture",endDrag);
-divider.addEventListener("dblclick",()=>setSplit(40,true));
-divider.addEventListener("keydown",e=>{
-  let delta=0;
-  if(e.key==="ArrowLeft")delta=-(e.shiftKey?8:2);
-  if(e.key==="ArrowRight")delta=(e.shiftKey?8:2);
-  if(e.key==="Home"){setSplit(40,true);e.preventDefault();e.stopPropagation();return;}
-  if(!delta)return;
-  setSplit(split+delta,true);e.preventDefault();e.stopPropagation();
-});
-window.addEventListener("resize",()=>setSplit(split));
-setSplit(split);
+function setWidth(side,value,save=false){
+  const b=layoutBounds();
+  if(side==="left"){
+    leftWidth=clamp(value,b.leftMin,100-actionsWidth-b.speechMin);
+  } else {
+    actionsWidth=clamp(value,b.actionMin,100-leftWidth-b.speechMin);
+  }
+  applyWidths(save?(side==="left"?"leftWidth":"actionWidth"):null);
+}
+function configureDivider(node,side){
+  let dragging=false;
+  node.addEventListener("pointerdown",e=>{
+    if(e.button!==0)return;
+    dragging=true;node.classList.add("dragging");
+    if(node.setPointerCapture)node.setPointerCapture(e.pointerId);
+    e.preventDefault();
+  });
+  node.addEventListener("pointermove",e=>{
+    if(!dragging)return;
+    const rect=workArea.getBoundingClientRect();
+    const proposed=side==="left"?(e.clientX-rect.left)/rect.width*100:(rect.right-e.clientX)/rect.width*100;
+    setWidth(side,proposed,false);
+  });
+  const stop=()=>{
+    if(!dragging)return;
+    dragging=false;node.classList.remove("dragging");
+    savePreference(side==="left"?"leftWidth":"actionWidth",side==="left"?leftWidth:actionsWidth);
+  };
+  node.addEventListener("pointerup",stop);
+  node.addEventListener("pointercancel",stop);
+  node.addEventListener("lostpointercapture",stop);
+  node.addEventListener("dblclick",()=>setWidth(side,(side==="left"?LAYOUT_DEFAULT.left:LAYOUT_DEFAULT.actions),true));
+  node.addEventListener("keydown",e=>{
+    if(e.key==="Home"){
+      setWidth(side,(side==="left"?LAYOUT_DEFAULT.left:LAYOUT_DEFAULT.actions),true);e.preventDefault();e.stopPropagation();return;
+    }
+    if(e.key!=="ArrowLeft"&&e.key!=="ArrowRight")return;
+    const movement=(e.key==="ArrowRight"?1:-1)*(e.shiftKey?8:2);
+    setWidth(side,(side==="left"?leftWidth:actionsWidth)+(side==="left"?movement:-movement),true);
+    e.preventDefault();e.stopPropagation();
+  });
+}
+configureDivider(leftDivider,"left");
+configureDivider(actionDivider,"actions");
+window.addEventListener("resize",()=>applyWidths());
+applyWidths();
 const importGuide=$("importGuide");
 $("importHelp").addEventListener("click",()=>importGuide.showModal());
 $("closeImportGuide").addEventListener("click",()=>importGuide.close());
 $("closeImportGuideBottom").addEventListener("click",()=>importGuide.close());
 
-document.addEventListener("keydown",e=>{const t=e.target;if(e.altKey||e.ctrlKey||e.metaKey||t instanceof HTMLElement&&(t.isContentEditable||t===divider||importGuide.open||["INPUT","TEXTAREA","SELECT","BUTTON"].includes(t.tagName)))return;if(["ArrowRight","PageDown"," "].includes(e.key)){e.preventDefault();move(1)}if(["ArrowLeft","PageUp"].includes(e.key)){e.preventDefault();move(-1)}if(e.key==="Home"){ci=0;redraw()}if(e.key==="End"){ci=data.lessons[li].cues.length-1;redraw()}});
+document.addEventListener("keydown",e=>{const t=e.target;if(e.altKey||e.ctrlKey||e.metaKey||t instanceof HTMLElement&&(t.isContentEditable||t===leftDivider||t===actionDivider||importGuide.open||["INPUT","TEXTAREA","SELECT","BUTTON"].includes(t.tagName)))return;if(["ArrowRight","PageDown"," "].includes(e.key)){e.preventDefault();move(1)}if(["ArrowLeft","PageUp"].includes(e.key)){e.preventDefault();move(-1)}if(e.key==="Home"){ci=0;redraw()}if(e.key==="End"){ci=data.lessons[li].cues.length-1;redraw()}});
 window.addEventListener("message",e=>{if(!popup||e.source!==popup||e.origin!==location.origin||e.data?.tag!==TAG)return;if(e.data.type==="HELLO"||e.data.type==="ALIVE"){lastSeen=Date.now();if(e.data.type==="HELLO")send()}});
 drawLessons();redraw();tick();setInterval(tick,1000);
 })();
