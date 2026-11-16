@@ -1,5 +1,7 @@
 # Инструкции для AI-ассистентов и Codex
 
+> **Актуализация 16.11.2026:** В этом репозитории **два независимых инструмента**: корневая презентация «Цифровые неандертальцы» (`index.html`, `audience.html`, `START_PRESENTATION.cmd`) и Course Studio (`course-studio/`, `START_COURSE_STUDIO.cmd`). Не объединять их интерфейсы, сценарии или команды запуска без отдельного решения. В `main` уже есть **25 PNG**, все 25 заметок в `content/notes-data.js` и корневой пульт для 00–25. `content/notes.json`, `tools/check-mvp.mjs` и описанный ниже «первый MVP на пяти слайдах» относятся к **историческому первому этапу**. Актуальная точка входа: [README](README.md). Для Course Studio открытый [PR #2](https://github.com/sanchezibnalehandro-dev/presentation/pull/2) остаётся Draft до проверки в Firefox / на двух экранах.
+
 ## Прочитать перед любым изменением
 
 1. `README.md`
